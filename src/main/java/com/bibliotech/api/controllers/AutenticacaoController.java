@@ -49,7 +49,7 @@ class Login {
 @Getter
 @Setter
 @AllArgsConstructor
-class Token {
+class   Token {
     private String token;
     private String tipo;
 }
