@@ -1,13 +1,15 @@
-package com.bibliotech.api.emprestimos;
+package com.bibliotech.api.reservas;
+
+import com.bibliotech.api.reservas.Reserva;
 
 import java.time.LocalDate;
 
-public record DadosListagemEmprestimo(Long id, LocalDate dataEmprestimo, LocalDate dataDevolucao, Long livroId, String livro_titulo, String livro_foto, Long pessoaId, String pessoa_nome) {
-    public DadosListagemEmprestimo(Emprestimo dados) {
+public record DadosListagemReserva(Long id, LocalDate dataReserva, LocalDate dataValidade, Long livroId, String livro_titulo, String livro_foto, Long pessoaId, String pessoa_nome) {
+    public DadosListagemReserva(Reserva dados) {
         this(
                 dados.getId(),
-                dados.getDataEmprestimo(),              // LocalDate
-                dados.getDataDevolucao(),               // LocalDate
+                dados.getDataReserva(),              // LocalDate
+                dados.getDataValidade(),               // LocalDate
                 dados.getLivro().getId(),               // Long livroId
                 dados.getLivro().getTitulo(),           // String livro_titulo
                 dados.getLivro().getFoto(),             // String livro_foto

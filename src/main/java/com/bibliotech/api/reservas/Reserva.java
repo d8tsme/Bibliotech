@@ -1,5 +1,7 @@
-package com.bibliotech.api.emprestimos;
+package com.bibliotech.api.reservas;
 
+import com.bibliotech.api.reservas.DadosAlteracaoReserva;
+import com.bibliotech.api.reservas.DadosCadastroReserva;
 import com.bibliotech.api.livros.Livro;
 import com.bibliotech.api.pessoas.Pessoa;
 import jakarta.persistence.*;
@@ -13,18 +15,18 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
-@Table(name = "emprestimo")
-@Entity(name = "emprestimos")
+@Table(name = "reserva")
+@Entity(name = "reservas")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Emprestimo {
+public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate dataEmprestimo;
-    private LocalDate dataDevolucao;
+    private LocalDate dataReserva;
+    private LocalDate dataValidade;
 
     @ManyToOne
     @JoinColumn(name = "livroId")
@@ -32,21 +34,22 @@ public class Emprestimo {
 
     // Relacionamento ManyToOne para pessoa
     @ManyToOne
-    @JoinColumn(name = "pessoaId") // A coluna da chave estrangeira na tabela 'emprestimo'
+    @JoinColumn(name = "pessoaId") // A coluna da chave estrangeira na tabela 'reserva'
     private Pessoa pessoa;
 
     // Construtor para cadastro
-    public Emprestimo(DadosCadastroEmprestimo dados, Livro livro, Pessoa pessoa) {
-        this.dataEmprestimo = dados.dataEmprestimo();
+    public Reserva(DadosCadastroReserva dados, Livro livro, Pessoa pessoa) {
+        this.dataReserva = dados.dataReserva();
+        this.dataValidade = dados.dataReserva().plusDays(15);
         this.livro = livro;
         this.pessoa = pessoa;
     }
 
 
     // Métodos de atualização e outros (adaptados para incluir o pessoa)
-    public void atualizaInformacoes(DadosAlteracaoEmprestimo dados, Livro novoLivro, Pessoa novoPessoa) {
-        if (dados.dataEmprestimo() != null) {
-            this.dataEmprestimo = dados.dataEmprestimo();
+    public void atualizaInformacoes(DadosAlteracaoReserva dados, Livro novoLivro, Pessoa novoPessoa) {
+        if (dados.dataReserva() != null) {
+            this.dataReserva = dados.dataReserva();
         }
         if (novoLivro != null) {
             this.livro = novoLivro;
@@ -54,6 +57,6 @@ public class Emprestimo {
         if (novoPessoa != null) {
             this.pessoa = novoPessoa;
         }
-        this.dataDevolucao = dados.dataDevolucao();
+        this.dataValidade = dados.dataReserva().plusDays(15);
     }
 }

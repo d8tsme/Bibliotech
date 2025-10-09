@@ -26,10 +26,10 @@ public class LivroController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroLivro dados, Autor autor, Genero genero) {
-        Autor a = autorRepositorio.getReferenceById(dados.autor_id());
-        Genero g = generoRepositorio.getReferenceById(dados.genero_id());
-        Livro livro = new Livro(dados.titulo(), dados.isbn(), dados.ano_publicacao(), autor, genero);
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroLivro dados) {
+        Autor autor = autorRepositorio.getReferenceById(dados.autorId());
+        Genero genero = generoRepositorio.getReferenceById(dados.generoId());
+        Livro livro = new Livro(dados, autor, genero);
         livroRepositorio.save(livro);
         return ResponseEntity.ok().build();
     }
@@ -46,13 +46,13 @@ public class LivroController {
         Livro livro = livroRepositorio.getReferenceById(id);
 
         Optional<Autor> novoAutor = Optional.empty();
-        if (dados.autor_id() != null) {
-            novoAutor = autorRepositorio.findById(dados.autor_id());
+        if (dados.autorId() != null) {
+            novoAutor = autorRepositorio.findById(dados.autorId());
         }
 
         Optional<Genero> novoGenero = Optional.empty();
-        if (dados.genero_id() != null) {
-            novoGenero = generoRepositorio.findById(dados.genero_id());
+        if (dados.generoId() != null) {
+            novoGenero = generoRepositorio.findById(dados.generoId());
         }
 
         livro.atualizaInformacoes(dados, novoAutor.orElse(null), novoGenero.orElse(null));

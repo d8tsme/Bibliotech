@@ -1,10 +1,10 @@
-package com.bibliotech.api.emprestimos;
+package com.bibliotech.api.reservas;
 
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record DadosCadastroEmprestimo(
+public record DadosCadastroReserva(
 
         @NotNull(message = "O ID do livro é obrigatório")
         Long livroId,
@@ -12,6 +12,8 @@ public record DadosCadastroEmprestimo(
         @NotNull(message = "O ID da pessoa é obrigatório")
         Long pessoaId,
 
-        @NotNull(message = "A data do empréstimo é obrigatória")
-        LocalDate dataEmprestimo
-) {}
+        @NotNull(message = "A data da reserva é obrigatória")
+        LocalDate dataReserva
+) {
+
+}

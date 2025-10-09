@@ -23,23 +23,23 @@ public class Livro {
     private Long id;
     private String titulo;
     private String isbn;
-    private int ano_publicacao;
+    private int anoPublicacao;
     private String foto;
 
     @ManyToOne
-    @JoinColumn(name = "autor_id")
+    @JoinColumn(name = "autorId")
     private Autor autor;
 
     // Relacionamento ManyToOne para Gênero
     @ManyToOne
-    @JoinColumn(name = "genero_id") // A coluna da chave estrangeira na tabela 'livro'
+    @JoinColumn(name = "generoId") // A coluna da chave estrangeira na tabela 'livro'
     private Genero genero;
 
     // Construtor para cadastro
     public Livro(DadosCadastroLivro dados, Autor autor, Genero genero) {
         this.titulo = dados.titulo();
         this.isbn = dados.isbn();
-        this.ano_publicacao = dados.ano_publicacao();
+        this.anoPublicacao = dados.anoPublicacao();
         this.autor = autor;
         this.genero = genero;
         this.foto = dados.foto();
@@ -54,8 +54,8 @@ public class Livro {
         if (dados.isbn() != null) {
             this.isbn = dados.isbn();
         }
-        if (dados.ano_publicacao() != null) {
-            this.ano_publicacao = dados.ano_publicacao();
+        if (dados.anoPublicacao() != null) {
+            this.anoPublicacao = dados.anoPublicacao();
         }
         if (novoAutor != null) {
             this.autor = novoAutor;

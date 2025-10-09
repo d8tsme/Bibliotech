@@ -1,4 +1,6 @@
 package com.bibliotech.api.emprestimos;
 
-public record DadosAlteracaoEmprestimo(Long id, Integer data_emprestimo, Integer data_devolucao, Long livro_id, Long pessoa_id){ // Permitir a alteração do autor
+import java.time.LocalDate;
+
+public record DadosAlteracaoEmprestimo(Long id, LocalDate dataEmprestimo, LocalDate dataDevolucao, Long livroId, Long pessoaId){ // Permitir a alteração do autor
 }

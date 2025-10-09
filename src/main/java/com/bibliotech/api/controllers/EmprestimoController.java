@@ -1,8 +1,8 @@
 package com.bibliotech.api.controllers;
 
-import com.bibliotech.api.livroes.Livro;
+import com.bibliotech.api.livros.Livro;
 import com.bibliotech.api.emprestimos.*;
-import com.bibliotech.api.livroes.LivroRepositorio;
+import com.bibliotech.api.livros.LivroRepositorio;
 import com.bibliotech.api.pessoas.Pessoa;
 import com.bibliotech.api.pessoas.PessoaRepositorio;
 import jakarta.transaction.Transactional;
@@ -26,10 +26,10 @@ public class EmprestimoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroEmprestimo dados, Livro livro, Pessoa pessoa) {
-        Livro a = livroRepositorio.getReferenceById(dados.livro_id());
-        Pessoa g = pessoaRepositorio.getReferenceById(dados.pessoa_id());
-        Emprestimo emprestimo = new Emprestimo(dados.titulo(), dados.isbn(), dados.ano_publicacao(), livro, pessoa);
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroEmprestimo dados) {
+        Livro livro = livroRepositorio.getReferenceById(dados.livroId());
+        Pessoa pessoa = pessoaRepositorio.getReferenceById(dados.pessoaId());
+        Emprestimo emprestimo = new Emprestimo(dados, livro, pessoa);
         emprestimoRepositorio.save(emprestimo);
         return ResponseEntity.ok().build();
     }
@@ -46,13 +46,13 @@ public class EmprestimoController {
         Emprestimo emprestimo = emprestimoRepositorio.getReferenceById(id);
 
         Optional<Livro> novoLivro = Optional.empty();
-        if (dados.livro_id() != null) {
-            novoLivro = livroRepositorio.findById(dados.livro_id());
+        if (dados.livroId() != null) {
+            novoLivro = livroRepositorio.findById(dados.livroId());
         }
 
         Optional<Pessoa> novoPessoa = Optional.empty();
-        if (dados.pessoa_id() != null) {
-            novoPessoa = pessoaRepositorio.findById(dados.pessoa_id());
+        if (dados.pessoaId() != null) {
+            novoPessoa = pessoaRepositorio.findById(dados.pessoaId());
         }
 
         emprestimo.atualizaInformacoes(dados, novoLivro.orElse(null), novoPessoa.orElse(null));

@@ -9,10 +9,10 @@ public record DadosCadastroLivro(
         String titulo,
 
         @NotNull(message = "O ID do autor é obrigatório")
-        Long autor_id,
+        Long autorId,
 
         @NotNull(message = "O ID do gênero é obrigatório")
-        Long genero_id,
+        Long generoId,
 
         @NotBlank(message = "O título é obrigatório")
         String foto,
@@ -22,5 +22,5 @@ public record DadosCadastroLivro(
         String isbn,
 
         @NotNull(message = "O ano de publicação é obrigatório")
-        Integer ano_publicacao
+        Integer anoPublicacao
 ) {}
