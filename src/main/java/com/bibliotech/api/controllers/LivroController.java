@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,9 +37,16 @@ public class LivroController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemLivro>> listar(Pageable paginacao) {
-        Page<DadosListagemLivro> page = livroRepositorio.findAll(paginacao).map(DadosListagemLivro::new);
-        return ResponseEntity.ok(page);
+    public ResponseEntity<?> listar(@RequestParam(required = false) String status, Pageable paginacao) {
+        Page<DadosListagemLivro> page;
+        List<DadosListagemLivro> livros;
+        if (status != null) {
+            livros = livroRepositorio.findByStatus(status).stream().map(DadosListagemLivro::new).toList();
+            return ResponseEntity.ok(livros);
+        } else {
+            page = livroRepositorio.findAll(paginacao).map(DadosListagemLivro::new);
+            return ResponseEntity.ok(page);
+        }
     }
 
     @PutMapping("/{id}")
@@ -58,4 +67,14 @@ public class LivroController {
         livro.atualizaInformacoes(dados, novoAutor.orElse(null), novoGenero.orElse(null));
         return ResponseEntity.ok(new DadosListagemLivro(livro));
     }
+
+    @GetMapping("/autor/{id}")
+    public ResponseEntity<?> listarPeloId(@PathVariable Long id) {
+        if(!autorRepositorio.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        List<Livro> livros = livroRepositorio.findByAutorId(id);
+        return ResponseEntity.ok(livros);
+    }
+
 }

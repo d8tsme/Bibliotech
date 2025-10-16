@@ -25,6 +25,7 @@ public class Emprestimo {
     private Long id;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucao;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "livroId")
@@ -37,9 +38,9 @@ public class Emprestimo {
 
     // Construtor para cadastro
     public Emprestimo(DadosCadastroEmprestimo dados, Livro livro, Pessoa pessoa) {
-        this.dataEmprestimo = dados.dataEmprestimo();
         this.livro = livro;
         this.pessoa = pessoa;
+        this.status = "Em andamento";
     }
 
 
@@ -55,5 +56,10 @@ public class Emprestimo {
             this.pessoa = novoPessoa;
         }
         this.dataDevolucao = dados.dataDevolucao();
+    }
+
+    public void atualizaDataDevolucao() {
+        this.dataDevolucao = LocalDate.now();
+        this.status = "Finalizado";
     }
 }

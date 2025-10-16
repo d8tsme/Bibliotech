@@ -7,6 +7,7 @@ import com.bibliotech.api.pessoas.Pessoa;
 import com.bibliotech.api.pessoas.PessoaRepositorio;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,9 @@ public class EmprestimoController {
         Pessoa pessoa = pessoaRepositorio.getReferenceById(dados.pessoaId());
         Emprestimo emprestimo = new Emprestimo(dados, livro, pessoa);
         emprestimoRepositorio.save(emprestimo);
+
+        livro.atualizaStatus("Emprestado");
+
         return ResponseEntity.ok().build();
     }
 
@@ -43,19 +47,28 @@ public class EmprestimoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAlteracaoEmprestimo dados) {
+        if (!emprestimoRepositorio.existsById(dados.id())) {
+            return ResponseEntity.notFound().build();
+        }
         Emprestimo emprestimo = emprestimoRepositorio.getReferenceById(id);
-
-        Optional<Livro> novoLivro = Optional.empty();
-        if (dados.livroId() != null) {
-            novoLivro = livroRepositorio.findById(dados.livroId());
-        }
-
-        Optional<Pessoa> novoPessoa = Optional.empty();
-        if (dados.pessoaId() != null) {
-            novoPessoa = pessoaRepositorio.findById(dados.pessoaId());
-        }
-
-        emprestimo.atualizaInformacoes(dados, novoLivro.orElse(null), novoPessoa.orElse(null));
+        Livro livro = livroRepositorio.getReferenceById(dados.livroId());
+        Pessoa pessoa = pessoaRepositorio.getReferenceById(dados.pessoaId());
+        emprestimo.atualizaInformacoes(dados, livro, pessoa);
         return ResponseEntity.ok(new DadosListagemEmprestimo(emprestimo));
+    }
+
+    @PutMapping("/devolucao/{id}")
+    @Transactional
+    // atualizaDataDevolucao (emprestimo)
+    // livro -> atualizaStatus ("Disponivel")
+    public ResponseEntity devolver(@PathVariable Long id, @RequestBody @Valid DadosAlteracaoEmprestimo dados) {
+        if (!emprestimoRepositorio.existsById(dados.id())) {
+            return ResponseEntity.notFound().build();
+        }
+        Emprestimo emprestimo = emprestimoRepositorio.getReferenceById(id);
+        Livro livro = livroRepositorio.getReferenceById(dados.livroId());
+        livro.atualizaStatus("Disponível");
+        emprestimo.atualizaDataDevolucao();
+        return ResponseEntity.ok().build();
     }
 }

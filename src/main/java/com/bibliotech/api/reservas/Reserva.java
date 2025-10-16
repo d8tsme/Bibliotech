@@ -59,4 +59,5 @@ public class Reserva {
         }
         this.dataValidade = dados.dataReserva().plusDays(15);
     }
+
 }

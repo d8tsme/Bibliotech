@@ -1,0 +1,23 @@
+CREATE TABLE Usuario(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(255),
+    senha VARCHAR(255)
+);
+
+CREATE TABLE Pessoa(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    email VARCHAR(255),
+    telefone INT
+);
+
+CREATE TABLE Genero(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50)
+);
+
+CREATE TABLE Autor(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    foto LONGTEXT
+);

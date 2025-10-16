@@ -19,16 +19,19 @@ public class Autor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-
-    @OneToMany(mappedBy = "autor")
-    private List<Livro> livros;
+    private String foto;
 
     public Autor(DadosCadastroAutor dados) {
         this.nome = dados.nome();
+        this.foto = dados.foto();
     }
+
     public void atualizaInformacoes(DadosAlteracaoAutor dados){
         if (dados.nome() != null) {
             this.nome = dados.nome();
+        }
+        if (dados.foto() != null) {
+            this.foto = dados.foto();
         }
     }
 }

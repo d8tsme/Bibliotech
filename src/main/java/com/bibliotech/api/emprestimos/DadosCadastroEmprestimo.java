@@ -10,8 +10,5 @@ public record DadosCadastroEmprestimo(
         Long livroId,
 
         @NotNull(message = "O ID da pessoa é obrigatório")
-        Long pessoaId,
-
-        @NotNull(message = "A data do empréstimo é obrigatória")
-        LocalDate dataEmprestimo
+        Long pessoaId
 ) {}

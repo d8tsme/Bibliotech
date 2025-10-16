@@ -1,4 +1,4 @@
 package com.bibliotech.api.autores;
 
-public record DadosCadastroAutor(String nome) {
+public record DadosCadastroAutor(String nome, String foto) {
 }

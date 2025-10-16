@@ -24,7 +24,9 @@ public class Livro {
     private String titulo;
     private String isbn;
     private int anoPublicacao;
+    private int paginas;
     private String foto;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "autorId")
@@ -43,6 +45,7 @@ public class Livro {
         this.autor = autor;
         this.genero = genero;
         this.foto = dados.foto();
+        this.status = "Disponível";
     }
 
 
@@ -66,5 +69,15 @@ public class Livro {
         if (dados.foto() != null) {
             this.foto = dados.foto();
         }
+        if (dados.paginas() != 0) {
+            this.paginas = dados.paginas();
+        }
+        if (dados.status() != null) {
+            this.status = dados.status();
+        }
+    }
+
+    public void atualizaStatus(String status) {
+        this.status = status;
     }
 }

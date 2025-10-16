@@ -8,13 +8,15 @@ public record DadosCadastroLivro(
         @NotBlank(message = "O título é obrigatório")
         String titulo,
 
+        @NotBlank(message = "O Número de Páginas é obrigatório")
+        int paginas,
+
         @NotNull(message = "O ID do autor é obrigatório")
         Long autorId,
 
         @NotNull(message = "O ID do gênero é obrigatório")
         Long generoId,
 
-        @NotBlank(message = "O título é obrigatório")
         String foto,
 
         @NotBlank(message = "O ISBN é obrigatório")
