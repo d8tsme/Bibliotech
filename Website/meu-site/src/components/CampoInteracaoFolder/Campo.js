@@ -1,11 +1,9 @@
 import "./Campo.css";
 
-function Campo() {
+function Campo(name, link) {
     return (
-        <div className="campo-interacao">
-            <ul className="links-interacao">
-                
-            </ul>
-        </div>
+        <li><a href={link}>{name}</a></li>
     );
 }
+
+export default Campo;

@@ -7,7 +7,7 @@ function Navbar() {
       <div className="sidebar-logo">Bibliotech</div>
 
       <ul className="sidebar-links">
-        <li><a href="#">Autor</a></li>
+        <li><a href="Website\meu-site\src\pages\Autor.jsx">Autor</a></li>
         <li><a href="#">Pessoa</a></li>
         <li><a href="#">Reservas</a></li>
         <li><a href="#">Gêneros</a></li>
