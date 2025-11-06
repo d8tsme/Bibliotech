@@ -1,5 +1,5 @@
 import './App.css';
-import Navbar from '../components/Navbarfolder/Navbar';
+import Navbar from '../../components/Navbarfolder/navbar.js';
 
 function App() {
   async function getAutor() {
@@ -16,8 +16,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Bem-vindo à Bibliotech</h1>
-
-
         <Navbar/>
       </header>
     </div>
