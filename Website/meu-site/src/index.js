@@ -1,14 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from '../src/pages/MainPage/Main';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/LoginPage/Login';
+import Main from './pages/MainPage/Main';
+import Autor from './pages/AutorPage/Autor';
+import Pessoas from './pages/PessoasPage/Pessoas';
+import Emprestimo from './pages/EmprestimoPage/Emprestimo';
+import Genero from './pages/GeneroPage/Genero';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/main" element={<Main />} />
+          <Route path="/Main" element={<Main />} />
+          <Route path="/autores" element={<Autor />} />
+          <Route path="/pessoas" element={<Pessoas />} />
+          <Route path="/emprestimos" element={<Emprestimo />} />
+          <Route path="/generos" element={<Genero />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
   </React.StrictMode>
 );
 

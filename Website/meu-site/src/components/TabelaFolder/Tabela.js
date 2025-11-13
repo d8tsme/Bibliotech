@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import apiFetch from '../../utils/apiFetch';
 import PropTypes from "prop-types";
 
-const API_BASE = "https://kelsi-scrobiculate-dina.ngrok-free.dev";
+// use a relative path so the CRA dev proxy forwards the request to the API host
+const API_BASE = "/livros/listar";
 
 export default function Tabela({ titulo = "Lista de livros", rows }) {
     const [data, setData] = useState(rows || []);
-    const [loading, setLoading] = useState(!rows);
+    const [loading, setLoading] = useState(!rows || (Array.isArray(rows) && rows.length === 0));
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (rows && rows.length) {
+        // if rows passed from parent, use them and skip fetching
+        if (rows && Array.isArray(rows) && rows.length > 0) {
             setData(rows);
             setLoading(false);
             return;
@@ -19,18 +24,20 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
         setLoading(true);
         setError(null);
 
-        fetch(API_BASE)
-            .then((res) => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            })
+        apiFetch(API_BASE, { method: 'GET' })
             .then((json) => {
                 if (cancelled) return;
-                const items = Array.isArray(json) ? json : json?.books ?? [];
+                // support array responses or wrapped objects like { data: [...] } or { books: [...] }
+                const items = Array.isArray(json) ? json : json?.data ?? json?.books ?? [];
                 setData(items);
             })
             .catch((err) => {
                 if (cancelled) return;
+                // on auth errors navigate to login
+                if (err.status === 401 || err.status === 403) {
+                    navigate('/login');
+                    return;
+                }
                 setError(err.message || "Erro ao carregar dados");
                 setData([]);
             })
@@ -41,7 +48,7 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
         return () => {
             cancelled = true;
         };
-    }, [rows]);
+    }, [rows, navigate]);
 
     return (
         <div style={{ padding: 12, fontFamily: "system-ui, sans-serif" }}>
@@ -67,10 +74,10 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
                                 <th style={thStyle}>Foto</th>
                                 <th style={thStyle}>Título</th>
                                 <th style={thStyle}>Autor</th>
-                                <th style={thStyle}>ISBN</th>
-                                <th style={thStyle}>Ano</th>
                                 <th style={thStyle}>Gênero</th>
+                                <th style={thStyle}>ISBN</th>
                                 <th style={thStyle}>Páginas</th>
+                                <th style={thStyle}>Ano</th>
                                 <th style={thStyle}>Status</th>
                             </tr>
                         </thead>
@@ -90,10 +97,10 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
                                     </td>
                                     <td style={tdStyle}>{r.titulo ?? "-"}</td>
                                     <td style={tdStyle}>{r.autor ?? "-"}</td>
-                                    <td style={tdStyle}>{r.isbn ?? "-"}</td>
-                                    <td style={tdStyle}>{r.anoPublicacao ?? "-"}</td>
                                     <td style={tdStyle}>{r.genero ?? "-"}</td>
+                                    <td style={tdStyle}>{r.isbn ?? "-"}</td>
                                     <td style={tdStyle}>{r.paginas ?? "-"}</td>
+                                    <td style={tdStyle}>{r.anoPublicacao ?? "-"}</td>
                                     <td style={tdStyle}>{r.status ?? "-"}</td>
                                 </tr>
                             ))}

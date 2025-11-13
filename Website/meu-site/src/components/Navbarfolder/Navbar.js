@@ -1,5 +1,6 @@
 // src/components/Navbar.jsx
 import "./Navbar.css";
+import { NavLink } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -7,11 +8,11 @@ function Navbar() {
       <div className="sidebar-logo">Bibliotech</div>
 
       <ul className="sidebar-links">
-        <li><a href="..\src\pages\AutorPage\Autor.jsx">Autor</a></li>
-        <li><a href="">Pessoas</a></li>
-        <li><a href="">Reservas</a></li>
-        <li><a href="">Gêneros</a></li>
-        <li><a href="">Livros</a></li>
+        <li><NavLink to="/Main" className={({isActive}) => isActive ? 'active' : ''}>Livros</NavLink></li>
+        <li><NavLink to="/autores" className={({isActive}) => isActive ? 'active' : ''}>Autor</NavLink></li>
+        <li><NavLink to="/pessoas" className={({isActive}) => isActive ? 'active' : ''}>Pessoas</NavLink></li>
+  <li><NavLink to="/emprestimos" className={({isActive}) => isActive ? 'active' : ''}>Empréstimos</NavLink></li>
+        <li><NavLink to="/generos" className={({isActive}) => isActive ? 'active' : ''}>Gêneros</NavLink></li>
       </ul>
     </aside>
   );

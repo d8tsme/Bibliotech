@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root{
+  --brown-900: #3b1f12;
+  --brown-700: #5a2a18;
+  --brown-500: #7a3b21;
+  --bg-soft: #fbfaf9;
+  --card-white: #ffffff;
+  --muted: #6b6b6b;
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --transition-fast: 160ms;
+}
+
+/* global smooth helpers */
+*{box-sizing:border-box}
+a{color:inherit}
+.fade-in{animation:fadeInUp .42s cubic-bezier(.2,.9,.2,1) both}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* apply nicer default for inputs across the app */
+input,textarea,select,button{font-family:inherit}
+

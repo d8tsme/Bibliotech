@@ -1,14 +1,21 @@
-import './App.css';
-import { BrowserRouter } from 'react-router-dom';
+import './Login.css';
+import Form from '../../components/Formfolder/Form';
+import LogoPeople from './logo-people.svg';
 
-function App() {
+export default function Login() {
   return (
-    <div className="App">
-      <header className="App-header">
-        
-      </header>
+    <div className="login-page">
+    <div className="login-card fade-in">
+        <div className="card-header">
+          <img src={LogoPeople} alt="logo" className="brand-icon" />
+          <h1 className="brand-title">Bibliotech™</h1>
+          <p className="brand-sub">Use sua conta para entrar.</p>
+        </div>
+
+        <div className="card-body">
+          <Form />
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;

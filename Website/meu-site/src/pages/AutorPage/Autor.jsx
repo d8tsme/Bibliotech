@@ -1,17 +1,22 @@
-import './App.css';
-import Navbar from '../../components/Navbarfolder/navbar.js';
+import React, { useEffect } from 'react';
+import '../LoginPage/App.css';
+import Navbar from '../../components/Navbarfolder/Navbar.js';
 
-function App() {
+function Autor() {
   async function getAutor() {
-    fetch('http://localhost:8080/autores/listar',
-      {
-        method: 'GET',
-        headers: {
-           "Authorization": "Bearer " + sessionStorage.getItem("jwt-token")
-        }
-     }).then(response => response.json())
-       .then(data => console.log(data))
+    try {
+      const json = await (await import('../../utils/apiFetch')).default('/autores/listar');
+      console.log(json);
+    } catch (err) {
+      console.error('Erro ao buscar autores:', err);
+      if (err.status === 401 || err.status === 403) {
+        window.location.href = '/login';
+      }
+    }
   }
+  useEffect(() => {
+    getAutor();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
@@ -22,4 +27,4 @@ function App() {
   );
 }
 
-export default App;
+export default Autor;
