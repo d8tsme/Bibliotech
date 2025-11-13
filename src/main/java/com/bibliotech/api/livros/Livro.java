@@ -45,6 +45,7 @@ public class Livro {
         this.autor = autor;
         this.genero = genero;
         this.foto = dados.foto();
+        this.paginas = dados.paginas();
         this.status = "Disponível";
     }
 

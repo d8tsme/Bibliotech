@@ -26,9 +26,9 @@ public class LivroController {
     @Autowired
     private GeneroRepositorio generoRepositorio;
 
-    @PostMapping
+    @PostMapping("/inserir")
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroLivro dados) {
+    public ResponseEntity inserir(@RequestBody @Valid DadosCadastroLivro dados) {
         Autor autor = autorRepositorio.getReferenceById(dados.autorId());
         Genero genero = generoRepositorio.getReferenceById(dados.generoId());
         Livro livro = new Livro(dados, autor, genero);
@@ -36,7 +36,7 @@ public class LivroController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<?> listar(@RequestParam(required = false) String status) {
         List<DadosListagemLivro> livros = null;
         if (status != null) {
@@ -48,7 +48,7 @@ public class LivroController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     @Transactional
     public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAlteracaoLivro dados) {
         Livro livro = livroRepositorio.getReferenceById(id);
