@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import '../LoginPage/App.css';
 import Navbar from '../../components/Navbarfolder/Navbar.js';
+import Tabela from '../../components/TabelaFolder/Tabela';
+import AddAutorCard from '../../components/EntityForms/AddAutorCard';
+import { useState } from 'react';
 
 function Autor() {
+  const [showAdd, setShowAdd] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   async function getAutor() {
     try {
       const json = await (await import('../../utils/apiFetch')).default('/autores/listar');
@@ -20,8 +25,13 @@ function Autor() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Bem-vindo à Bibliotech</h1>
+        <h1>Autores</h1>
         <Navbar/>
+        <div style={{width:'100%', padding:12}}>
+          <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Autor</button>
+        </div>
+        <Tabela titulo="Autores" apiPath="/autores/listar" key={reloadKey} columns={[{key:'foto',label:'Foto'},{key:'nome',label:'Nome'}]} />
+        <AddAutorCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
       </header>
     </div>
   );

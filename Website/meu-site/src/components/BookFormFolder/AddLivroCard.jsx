@@ -55,8 +55,8 @@ export default function AddLivroCard({ open, onClose, onCreated }) {
       const form = new FormData();
       form.append('titulo', titulo);
       // send autor and genero as ids when available, otherwise as string
-      form.append('autor', autor);
-      form.append('genero', genero);
+      form.append('autorId', autor);
+      form.append('generoId', genero);
       form.append('paginas', paginas);
       form.append('anoPublicacao', anoPublicacao);
       form.append('isbn', isbn);

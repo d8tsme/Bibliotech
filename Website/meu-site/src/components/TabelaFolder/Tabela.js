@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import apiFetch from '../../utils/apiFetch';
 import PropTypes from "prop-types";
 
-// use a relative path so the CRA dev proxy forwards the request to the API host
-const API_BASE = "/livros/listar";
-
-export default function Tabela({ titulo = "Lista de livros", rows }) {
+// Tabela is generic; pass `apiPath` like '/livros/listar' to fetch data
+export default function Tabela({ titulo = "Lista", rows, apiPath = '/livros/listar', columns }) {
     const [data, setData] = useState(rows || []);
     const [loading, setLoading] = useState(!rows || (Array.isArray(rows) && rows.length === 0));
     const [error, setError] = useState(null);
@@ -24,7 +22,7 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
         setLoading(true);
         setError(null);
 
-        apiFetch(API_BASE, { method: 'GET' })
+        apiFetch(apiPath, { method: 'GET' })
             .then((json) => {
                 if (cancelled) return;
                 // support array responses or wrapped objects like { data: [...] } or { books: [...] }
@@ -48,7 +46,7 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
         return () => {
             cancelled = true;
         };
-    }, [rows, navigate]);
+    }, [rows, navigate, apiPath]);
 
     return (
         <div style={{ padding: 12, fontFamily: "system-ui, sans-serif" }}>
@@ -65,43 +63,28 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
                     <table
                         style={{
                             width: "100%",
-                            borderCollapse: "collapse",
+                            borderCollapse: "separate",
+                            borderSpacing: '0 8px',
                             minWidth: 700,
+                            background: 'transparent',
+                            color: '#fff'
                         }}
                     >
                         <thead>
                             <tr>
-                                <th style={thStyle}>Foto</th>
-                                <th style={thStyle}>Título</th>
-                                <th style={thStyle}>Autor</th>
-                                <th style={thStyle}>Gênero</th>
-                                <th style={thStyle}>ISBN</th>
-                                <th style={thStyle}>Páginas</th>
-                                <th style={thStyle}>Ano</th>
-                                <th style={thStyle}>Status</th>
+                                {(columns && columns.length > 0 ? columns : defaultColumns()).map(col => (
+                                    <th key={col.key} style={thStyle}>{col.label}</th>
+                                ))}
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((r, idx) => (
-                                <tr key={r.isbn ?? idx} style={idx % 2 ? rowOddStyle : null}>
-                                    <td style={tdStyle}>
-                                        {r.foto ? (
-                                            <img
-                                                src={r.foto}
-                                                alt={r.titulo || "capa"}
-                                                style={{ width: 60, height: "auto", objectFit: "cover" }}
-                                            />
-                                        ) : (
-                                            <div style={{ width: 60, height: 80, background: "#eee" }} />
-                                        )}
-                                    </td>
-                                    <td style={tdStyle}>{r.titulo ?? "-"}</td>
-                                    <td style={tdStyle}>{r.autor ?? "-"}</td>
-                                    <td style={tdStyle}>{r.genero ?? "-"}</td>
-                                    <td style={tdStyle}>{r.isbn ?? "-"}</td>
-                                    <td style={tdStyle}>{r.paginas ?? "-"}</td>
-                                    <td style={tdStyle}>{r.anoPublicacao ?? "-"}</td>
-                                    <td style={tdStyle}>{r.status ?? "-"}</td>
+                                <tr key={r.id ?? r.isbn ?? idx} style={idx % 2 ? rowOddStyle : null}>
+                                    {(columns && columns.length > 0 ? columns : defaultColumns()).map(col => (
+                                        <td key={col.key} style={tdStyle}>
+                                            {renderCell(r, col.key)}
+                                        </td>
+                                    ))}
                                 </tr>
                             ))}
                         </tbody>
@@ -112,25 +95,50 @@ export default function Tabela({ titulo = "Lista de livros", rows }) {
     );
 }
 
+function renderCell(row, key) {
+    const v = row[key];
+    if (!v && v !== 0) return '-';
+    if (key.toLowerCase().includes('foto') && typeof v === 'string') {
+        return <img src={v} alt="foto" style={{ width: 60, height: 'auto', objectFit: 'cover' }} />;
+    }
+    return String(v);
+}
+
+function defaultColumns() {
+    return [
+        { key: 'foto', label: 'Foto' },
+        { key: 'titulo', label: 'Título' },
+        { key: 'autorNome', label: 'Autor' },
+        { key: 'generoNome', label: 'Gênero' },
+        { key: 'isbn', label: 'ISBN' },
+        { key: 'paginas', label: 'Páginas' },
+        { key: 'anoPublicacao', label: 'Ano' },
+        { key: 'status', label: 'Status' },
+    ];
+}
+
 // estilos simples reutilizáveis
 const thStyle = {
-    textAlign: "left",
-    padding: "8px 10px",
-    borderBottom: "2px solid #ddd",
-    background: "#fafafa",
-    fontWeight: 600,
+    textAlign: "center",
+    padding: "10px 12px",
+    borderBottom: "3px solid rgba(255,255,255,0.25)",
+    background: "transparent",
+    color: '#fff',
+    fontWeight: 800,
     fontSize: 14,
 };
 
 const tdStyle = {
-    padding: "8px 10px",
-    borderBottom: "1px solid #eee",
+    padding: "10px 12px",
+    borderBottom: "1px solid rgba(255,255,255,0.06)",
     fontSize: 14,
     verticalAlign: "middle",
+    color: '#fff',
+    textAlign: 'center',
 };
 
 const rowOddStyle = {
-    background: "#fbfbfb",
+    background: 'transparent',
 };
 
 Tabela.propTypes = {

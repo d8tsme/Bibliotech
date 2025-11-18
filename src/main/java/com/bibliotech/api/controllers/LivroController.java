@@ -12,9 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/livros")
@@ -34,6 +40,43 @@ public class LivroController {
         Livro livro = new Livro(dados, autor, genero);
         livroRepositorio.save(livro);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/inserir")
+    @Transactional
+    public ResponseEntity cadastrarComFoto(@ModelAttribute @Valid DadosCadastroLivroComFoto dados) {
+        Autor autor = autorRepositorio.getReferenceById(dados.autorId());
+        Genero genero = generoRepositorio.getReferenceById(dados.generoId());
+
+        String fotoPath = null;
+        if (dados.foto() != null && !dados.foto().isEmpty()) {
+            try {
+                String fileName = UUID.randomUUID().toString() + "_" + dados.foto().getOriginalFilename();
+                Path uploadPath = Paths.get("uploads/livros");
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                Path filePath = uploadPath.resolve(fileName);
+                Files.write(filePath, dados.foto().getBytes());
+                fotoPath = filePath.toString();
+            } catch (IOException e) {
+                return ResponseEntity.status(500).body("Erro ao salvar a foto");
+            }
+        }
+
+        DadosCadastroLivro dadosLivro = new DadosCadastroLivro(
+            dados.titulo(),
+            dados.paginas(),
+            dados.autorId(),
+            dados.generoId(),
+            fotoPath,
+            dados.isbn(),
+            dados.anoPublicacao()
+        );
+
+        Livro livro = new Livro(dadosLivro, autor, genero);
+        livroRepositorio.save(livro);
+        return ResponseEntity.ok(new DadosListagemLivro(livro));
     }
 
     @GetMapping
