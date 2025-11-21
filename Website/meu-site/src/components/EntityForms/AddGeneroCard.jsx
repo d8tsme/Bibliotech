@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import apiFetch from '../../utils/apiFetch';
 import '../BookFormFolder/AddLivroCard.css';
+import ModalForm from '../modalform/modalform';
 
-export default function AddGeneroCard({ open, onClose, onCreated }) {
+export default function AddGeneroCard({ open, setOpen, onClose, onCreated }) {
   const [nome, setNome] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -26,21 +27,13 @@ export default function AddGeneroCard({ open, onClose, onCreated }) {
   };
 
   return (
-    <div className="addlivro-overlay">
-      <div className="addlivro-card">
-        <header className="addlivro-header">
-          <h2>Adicionar Gênero</h2>
-          <button className="close-btn" onClick={onClose} aria-label="Fechar">×</button>
-        </header>
-        <form className="addlivro-form" onSubmit={handleSubmit}>
-          {error && <div className="error">{error}</div>}
-          <label>Nome<input value={nome} onChange={e=>setNome(e.target.value)} required /></label>
-          <div className="addlivro-actions">
-            <button type="button" className="btn secondary" onClick={() => { reset(); onClose && onClose(); }}>Cancelar</button>
-            <button type="submit" className="btn primary" disabled={loading}>{loading ? 'Enviando...' : 'Adicionar'}</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <ModalForm open={open} setOpen={setOpen} handleSubmit={handleSubmit} header="Adicionar Gênero">
+      {error && <div className="error">{error}</div>}
+                <label>Nome<input value={nome} onChange={e=>setNome(e.target.value)} required /></label>
+                <div className="addlivro-actions">
+                  <button type="button" className="btn secondary" onClick={() => { reset(); onClose && onClose(); }}>Cancelar</button>
+                  <button type="submit" className="btn primary" disabled={loading}>{loading ? 'Enviando...' : 'Adicionar'}</button>
+                </div>
+    </ModalForm>
   );
 }

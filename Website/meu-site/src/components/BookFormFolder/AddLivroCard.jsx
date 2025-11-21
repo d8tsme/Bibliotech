@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import apiFetch from '../../utils/apiFetch';
 import './AddLivroCard.css';
+import ModalForm from '../modalform/modalform';
 
-export default function AddLivroCard({ open, onClose, onCreated }) {
+export default function AddLivroCard({ open, setOpen, onClose, onCreated }) {
   const [titulo, setTitulo] = useState('');
   const [paginas, setPaginas] = useState('');
   const [autor, setAutor] = useState('');
@@ -74,13 +75,7 @@ export default function AddLivroCard({ open, onClose, onCreated }) {
   };
 
   return (
-    <div className="form-overlay">
-      <div className="form-card">
-        <header className="form-header">
-          <h2 className="form-title">Adicionar Livro</h2>
-          <button className="close-btn" onClick={onClose} aria-label="Fechar">×</button>
-        </header>
-        <form className="form-body" onSubmit={handleSubmit}>
+    <ModalForm open={open} setOpen={setOpen} handleSubmit={handleSubmit} header="Adicionar Livro">
           {error && <div className="error-message">{error}</div>}
           <div className="form-group">
             <label className="form-label">Título</label>
@@ -120,8 +115,6 @@ export default function AddLivroCard({ open, onClose, onCreated }) {
             <button type="button" className="btn btn-secondary" onClick={() => { reset(); onClose && onClose(); }}>Cancelar</button>
             <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Enviando...' : 'Adicionar'}</button>
           </div>
-        </form>
-      </div>
-    </div>
+    </ModalForm>
   );
 }

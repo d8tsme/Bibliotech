@@ -3,6 +3,7 @@ import '../LoginPage/App.css';
 import Navbar from '../../components/Navbarfolder/Navbar.js';
 import Tabela from '../../components/TabelaFolder/Tabela';
 import AddAutorCard from '../../components/EntityForms/AddAutorCard';
+import Layout from '../../components/mainlayout/layout.jsx';
 import { useState } from 'react';
 
 function Autor() {
@@ -23,17 +24,18 @@ function Autor() {
     getAutor();
   }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Autores</h1>
-        <Navbar/>
-        <div style={{width:'100%', padding:12}}>
-          <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Autor</button>
-        </div>
-        <Tabela titulo="Autores" apiPath="/autores/listar" key={reloadKey} columns={[{key:'foto',label:'Foto'},{key:'nome',label:'Nome'}]} />
-        <AddAutorCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
-      </header>
-    </div>
+    <Layout>
+        <div className="App">
+        <header className="App-header">
+          <h1>Autores</h1>
+          <div style={{width:'100%', padding:12}}>
+            <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Autor</button>
+          </div>
+          <Tabela titulo="Autores" apiPath="/autores/listar" key={reloadKey} columns={[{key:'foto',label:'Foto'},{key:'nome',label:'Nome'}]} />
+          <AddAutorCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
+        </header>
+      </div>
+    </Layout>
   );
 }
 

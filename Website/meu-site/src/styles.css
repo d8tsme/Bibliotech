@@ -74,6 +74,8 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: 'flex';
+  width: '100%' 
 }
 
 html {
@@ -186,6 +188,11 @@ html {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  position: fixed;
+	left: 0;
+	top: 0;
+	height: 100%;
+  margin-right: 280px;
 }
 
 .sidebar-logo {
@@ -274,10 +281,10 @@ html {
 .form-card {
   width: 100%;
   max-width: 500px;
+  max-height: 500px;
   background: var(--soft-white);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-xl);
-  overflow: hidden;
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -325,6 +332,8 @@ html {
 
 .form-body {
   padding: var(--spacing-xl);
+    overflow-y: scroll;
+    max-height: 400px;
 }
 
 .form-group {
@@ -386,6 +395,7 @@ html {
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   margin: var(--spacing-xl) 0;
+  margin-left: 40px;
 }
 
 .table-header {
@@ -402,7 +412,7 @@ html {
 }
 
 .table {
-  width: 100%;
+  width:95%;
   border-collapse: collapse;
 }
 
@@ -429,6 +439,7 @@ html {
 .table tbody tr:hover {
   background: linear-gradient(135deg, var(--soft-cream) 0%, var(--soft-white) 100%);
   transform: scale(1.01);
+  color: #2C1810;
 }
 
 .table tbody tr:last-child td {
