@@ -41,7 +41,7 @@ export default function AddEmprestimoCard({ open, onClose, onCreated }) {
       return;
     }
     try {
-      await apiFetch('/emprestimos/inserir', {
+      await apiFetch('/emprestimos/cadastrar', {
         method: 'POST',
         body: JSON.stringify({ livroId: parseInt(livroId, 10), pessoaId: parseInt(pessoaId, 10) }),
         headers: { 'Content-Type': 'application/json' },
