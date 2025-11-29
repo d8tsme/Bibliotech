@@ -12,6 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -118,13 +122,19 @@ public class LivroController {
         return ResponseEntity.ok(new DadosListagemLivro(livro));
     }
 
+    private static final Logger log = LoggerFactory.getLogger(LivroController.class);
+
     @DeleteMapping("/excluir/{id}")
     @Transactional
     public ResponseEntity<?> excluir(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String user = auth != null && auth.isAuthenticated() ? auth.getName() : "anonymous";
+        log.info("Livro.excluir called by user='{}' for id={}", user, id);
         if (!livroRepositorio.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         livroRepositorio.deleteById(id);
+        log.info("Livro.excluir succeeded for id={} by user='{}'", id, user);
         return ResponseEntity.ok().build();
     }
 

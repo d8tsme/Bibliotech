@@ -12,7 +12,7 @@ export default function LivroTable() {
 
   useEffect(() => {
     loadLivros();
-  }, [sort, page]);
+  }, [sort, page, search]);
 
   async function loadLivros() {
     let url = `/livros/listar`;

@@ -42,6 +42,7 @@ public class TokenService {
             Jwts.parserBuilder().setSigningKey(CHAVE_SECRETA).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            System.out.println("Token invalid: " + e.getMessage());
             return false;
         }
     }

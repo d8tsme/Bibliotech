@@ -12,7 +12,7 @@ export default function GeneroTable() {
 
   useEffect(() => {
     loadGeneros();
-  }, [sort, page]);
+  }, [sort, page, search]);
 
   async function loadGeneros() {
     let url = `/generos/listar`;

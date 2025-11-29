@@ -24,8 +24,14 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = recuperarToken(request);
+        if (token != null) {
+            System.out.println("AutenticacaoViaTokenFilter: token present");
+        } else {
+            System.out.println("AutenticacaoViaTokenFilter: no token present");
+        }
         if (token != null && tokenService.isTokenValido(token)) {
             String username = tokenService.getUsuario(token);
+            System.out.println("AutenticacaoViaTokenFilter: token valid for user=" + username);
             UserDetails userDetails = autenticacaoService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

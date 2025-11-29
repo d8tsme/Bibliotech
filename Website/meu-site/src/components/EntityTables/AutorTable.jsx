@@ -12,7 +12,7 @@ export default function AutorTable() {
 
   useEffect(() => {
     loadAutores();
-  }, [sort, page]);
+  }, [sort, page, search]);
 
   async function loadAutores() {
     let url = `/autores/listar`;
@@ -29,7 +29,8 @@ export default function AutorTable() {
 
   async function handleDelete(id) {
     try {
-      await apiFetch(`/autores/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+      const result = await apiFetch(`/autores/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+      console.log('autor delete result:', result);
       await loadAutores();
     } catch (err) {
       console.error('Erro ao excluir autor', err);
@@ -39,7 +40,8 @@ export default function AutorTable() {
 
   async function handleBulkDelete() {
     try {
-      await Promise.all(selected.map(id => apiFetch(`/autores/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } }))); 
+      const results = await Promise.all(selected.map(id => apiFetch(`/autores/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } })));
+      console.log('autor bulk delete results:', results);
       setSelected([]);
       await loadAutores();
     } catch (err) {

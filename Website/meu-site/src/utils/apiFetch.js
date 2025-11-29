@@ -26,9 +26,19 @@ export default async function apiFetch(path, options = {}) {
   // prefer JSON responses
   if (!headers.Accept) headers.Accept = 'application/json';
 
-  const res = await fetch(path, Object.assign({}, options, { headers }));
-  console.log(res);
-  console.log(headers);
+  // If an environment target is set, prefix relative URLs to ensure all requests
+  // target the same backend the app is configured with (avoid token mismatch
+  // between different backends like ngrok and local).
+  const API_TARGET = process.env.REACT_APP_API_URL || '';
+  let urlToCall = path;
+  if (API_TARGET && path.startsWith('/')) {
+    urlToCall = `${API_TARGET}${path}`;
+  }
+  const res = await fetch(urlToCall, Object.assign({}, options, { headers }));
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('apiFetch response:', path, res);
+    console.log('apiFetch headers:', headers);
+  }
   // try to parse body
   let body = null;
   const contentType = res.headers.get('content-type') || '';
@@ -42,7 +52,14 @@ export default async function apiFetch(path, options = {}) {
     const err = new Error(body && (body.error || body.message) ? (body.error || body.message) : `HTTP ${res.status}`);
     err.status = res.status;
     err.body = body;
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('apiFetch error for', path, 'status:', res.status, 'body:', body);
+    }
     throw err;
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('apiFetch succeeded for', path, 'status:', res.status, 'body:', body);
   }
 
   return body;

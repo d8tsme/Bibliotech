@@ -12,7 +12,7 @@ export default function PessoaTable() {
 
   useEffect(() => {
     loadPessoas();
-  }, [sort, page]);
+  }, [sort, page, search]);
 
   async function loadPessoas() {
     let url = `/pessoas/listar`;

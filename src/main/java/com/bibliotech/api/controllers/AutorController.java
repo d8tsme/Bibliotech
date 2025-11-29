@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.net.URI;
 
@@ -15,6 +19,7 @@ import java.net.URI;
 public class AutorController {
     @Autowired
     private AutorRepositorio autorRepositorio;
+    private static final Logger log = LoggerFactory.getLogger(AutorController.class);
 
     @PostMapping("/inserir")
     @Transactional
@@ -47,10 +52,14 @@ public class AutorController {
     @DeleteMapping("/excluir/{id}")
     @Transactional
     public ResponseEntity<?> excluir(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String user = auth != null && auth.isAuthenticated() ? auth.getName() : "anonymous";
+        log.info("Autor.excluir called by user='{}' for id={} ", user, id);
         if(!autorRepositorio.existsById(id)){
             return ResponseEntity.notFound().build();
         }
         autorRepositorio.deleteById(id);
+        log.info("Autor.excluir succeeded for id={} by user='{}'", id, user);
         return ResponseEntity.noContent().build();
     }
 }
