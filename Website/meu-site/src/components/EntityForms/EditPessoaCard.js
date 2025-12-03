@@ -32,8 +32,7 @@ export default function EditPessoaCard({ open, onClose, onUpdated, pessoa }) {
     try {
       await apiFetch('/pessoas/alterar', {
         method: 'PUT',
-        body: JSON.stringify({ id: pessoa.id, nome, email, telefone }),
-        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: pessoa.id, nome, email, telefone: telefone ? parseInt(telefone, 10) : null }),
       });
       reset();
       onUpdated && onUpdated();

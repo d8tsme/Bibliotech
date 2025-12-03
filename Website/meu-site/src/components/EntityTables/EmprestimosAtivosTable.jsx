@@ -48,7 +48,7 @@ export default function EmprestimosAtivosTable({ onDevolvido, reloadKey }) {
   async function handleDevolver(emprestimo) {
     try {
       await apiFetch(`/emprestimos/devolucao/${emprestimo.id}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: emprestimo.id, livroId: emprestimo.livroId, pessoaId: emprestimo.pessoaId })
       });

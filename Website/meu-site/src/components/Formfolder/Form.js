@@ -37,8 +37,9 @@ export default function Form() {
 
             if (token) {
                 sessionStorage.setItem('token', token);
-                // navegação SPA para Main
-                navigate('/main');
+                sessionStorage.setItem('usuario', usuario);
+                // navegação SPA para Bibliotech
+                navigate('/bibliotech');
                 return;
             }
 

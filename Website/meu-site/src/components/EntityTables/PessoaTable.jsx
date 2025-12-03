@@ -20,7 +20,7 @@ export default function PessoaTable() {
   async function loadPessoas() {
     let url = `/pessoas/listar`;
     try {
-      const res = await apiFetch(url, { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+      const res = await apiFetch(url);
       let arr = Array.isArray(res) ? res : [];
       if (search) arr = arr.filter(p => p.nome && p.nome.toLowerCase().includes(search.toLowerCase()));
       // Sort the array
@@ -36,7 +36,7 @@ export default function PessoaTable() {
 
   async function handleDelete(id) {
     try {
-      await apiFetch(`/pessoas/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+      await apiFetch(`/pessoas/excluir/${id}`, { method: 'DELETE' });
       await loadPessoas();
     } catch (err) {
       console.error('Erro ao excluir pessoa', err);
@@ -46,7 +46,7 @@ export default function PessoaTable() {
 
   async function handleBulkDelete() {
     try {
-      await Promise.all(selected.map(id => apiFetch(`/pessoas/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } }))); 
+      await Promise.all(selected.map(id => apiFetch(`/pessoas/excluir/${id}`, { method: 'DELETE' }))); 
       setSelected([]);
       await loadPessoas();
     } catch (err) {

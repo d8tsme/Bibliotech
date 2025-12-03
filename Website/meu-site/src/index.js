@@ -9,6 +9,7 @@ import Pessoas from './pages/PessoasPage/Pessoas';
 import Emprestimo from './pages/EmprestimoPage/Emprestimo';
 import Reserva from './pages/ReservaPage/Reserva';
 import Genero from './pages/GeneroPage/Genero';
+import Bibliotech from './pages/BibliotechPage/Bibliotech';
 import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,6 +19,7 @@ root.render(
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/bibliotech" element={<Bibliotech />} />
           <Route path="/main" element={<Main />} />
           <Route path="/Main" element={<Main />} />
           <Route path="/autores" element={<Autor />} />

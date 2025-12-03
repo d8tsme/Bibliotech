@@ -24,6 +24,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 26px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .photo {
@@ -36,10 +38,12 @@
   justify-content: center;
   text-align: center;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
 .info {
   flex: 1;
+  min-width: 150px;
 }
 
 .info h3 {
@@ -55,6 +59,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .iconBtn {
@@ -63,4 +69,5 @@
   padding: 8px;
   border-radius: 8px;
   cursor: pointer;
+  flex-shrink: 0;
 }

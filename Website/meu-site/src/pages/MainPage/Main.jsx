@@ -11,7 +11,7 @@ function Main() {
       <Navbar/>
       <div className="main-content">
         <div className="page-header">
-          <h1>Bem-vindo à Bibliotech</h1>
+          <h1>Livros</h1>
           <div className="add-btn-bar">
             <button className="btn primary" onClick={() => setShowAdd(true)}>Adicionar Livro</button>
           </div>
