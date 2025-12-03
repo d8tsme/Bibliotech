@@ -22,7 +22,7 @@ export default function Reserva() {
 						<button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Reserva</button>
 					</div>
 				</div>
-				<ReservasAtivasTable reloadKey={reloadKey} onStatusChanged={triggerReload} />
+				<ReservasAtivasTable reloadKey={reloadKey} onConfirmada={triggerReload} />
 				<ReservasAntigasTable reloadKey={reloadKey} />
 				<AddReservaCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={triggerReload} />
 			</div>

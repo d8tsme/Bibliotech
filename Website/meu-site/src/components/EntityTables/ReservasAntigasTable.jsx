@@ -2,74 +2,41 @@ import React, { useState, useEffect } from 'react';
 import apiFetch from '../../utils/apiFetch';
 import handleAuthError from '../../utils/authError';
 import saveCsv from '../../utils/csv';
-import EditReservaCard from '../EntityForms/EditReservaCard';
 
-export default function ReservasExpiradasTable({ reloadKey }) {
+export default function ReservasAntigasTable({ reloadKey }) {
+  useEffect(()=>{
+    console.log('ReservasAntigasTable mounted reloadKey=', reloadKey);
+    return ()=>{ console.log('ReservasAntigasTable unmounted'); }
+  }, [reloadKey]);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('dataValidade');
-  const [editOpen, setEditOpen] = useState(false);
-  const [editingReserva, setEditingReserva] = useState(null);
   const cols = [
-    { key: 'livro_foto', label: 'Foto' },
-    { key: 'livro_titulo', label: 'Livro' },
     { key: 'pessoa_nome', label: 'Pessoa' },
-    { key: 'dataReserva', label: 'Data Reserva' },
-    { key: 'dataValidade', label: 'Data Validade' },
-    { key: 'confirmarPosse', label: 'Status' },
-    { key: 'actions', label: 'Ações' }
+    { key: 'livro_titulo', label: 'Livro' },
+    { key: 'status', label: 'Status' },
+    { key: 'dataValidade', label: 'Data Validade' }
   ];
 
-  // avoid exhaustive-deps warning: loader intentionally recreated
+  // avoid exhaustive-deps warning: loader intentionally recreated each render
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [search, sort, reloadKey]);
-
-  async function handleDelete(id) {
-    if (!window.confirm('Deseja realmente deletar esta reserva?')) return;
-    try {
-      await apiFetch(`/reservas/${id}`, { method: 'DELETE' });
-      await load();
-    } catch (err) {
-      console.error('Erro ao deletar reserva', err);
-      alert(err.message || 'Erro ao deletar reserva');
-    }
-  }
-
-  function handleEdit(reserva) {
-    setEditingReserva(reserva);
-    setEditOpen(true);
-  }
-
-  async function handleEditSave() {
-    await load();
-  }
-
-  async function handleConfirmPosse(id) {
-    try {
-      await apiFetch(`/reservas/${id}/confirmar-posse`, { method: 'PUT' });
-      alert('Posse confirmada com sucesso!');
-      await load();
-    } catch (err) {
-      console.error('Erro ao confirmar posse', err);
-      alert(err.message || 'Erro ao confirmar posse');
-    }
-  }
 
   async function load() {
     try {
       const res = await apiFetch('/reservas/listar');
-      let arr = Array.isArray(res) ? res : (res && res.content ? res.content : []);
-      arr = arr.filter(r => r.confirmarPosse === true);
+      let arr = Array.isArray(res) ? res : [];
+      arr = arr.filter(r => r.status === 'Finalizada');
       if (search) arr = arr.filter(r => (r.pessoa_nome && r.pessoa_nome.toLowerCase().includes(search.toLowerCase())) || (r.livro_titulo && r.livro_titulo.toLowerCase().includes(search.toLowerCase())));
       
       // Sort
       if (sort === 'dataValidade') arr.sort((a, b) => new Date(a.dataValidade) - new Date(b.dataValidade));
-      else if (sort === 'pessoa') arr.sort((a, b) => (a.pessoa_nome || '').localeCompare(b.pessoa_nome || ''));
-      else if (sort === 'livro') arr.sort((a, b) => (a.livro_titulo || '').localeCompare(b.livro_titulo || ''));
+      else if (sort === 'pessoa_nome') arr.sort((a, b) => (a.pessoa_nome || '').localeCompare(b.pessoa_nome || ''));
+      else if (sort === 'livro_titulo') arr.sort((a, b) => (a.livro_titulo || '').localeCompare(b.livro_titulo || ''));
       
       setData(arr);
     } catch (err) {
-      console.error('Erro ao carregar reservas antigas', err);
+      console.error('Erro ao carregar reservas confirmadas', err);
       if (err && (err.status === 401 || err.status === 403)) {
         handleAuthError();
         return;
@@ -80,16 +47,16 @@ export default function ReservasExpiradasTable({ reloadKey }) {
 
   return (
     <div>
-      <h3>Reservas antigas</h3>
+      <h3>Reservas confirmadas</h3>
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
         <input placeholder="Buscar" value={search} onChange={e => setSearch(e.target.value)} />
-        <button className="btn" onClick={() => saveCsv('reservas_antigas.csv', data, cols)}>Salvar CSV</button>
+        <button className="btn" onClick={() => saveCsv('reservas_confirmadas.csv', data, cols)}>Salvar CSV</button>
       </div>
       <table className="table">
         <thead>
           <tr>
             {cols.map(c => (
-              <th key={c.key} onClick={() => c.key !== 'actions' && c.key !== 'livro_foto' && setSort(c.key)} style={{cursor: c.key !== 'actions' && c.key !== 'livro_foto' ? 'pointer' : 'default'}}>
+              <th key={c.key} onClick={() => setSort(c.key)} style={{cursor: 'pointer'}}>
                 {c.label}
               </th>
             ))}
@@ -98,20 +65,14 @@ export default function ReservasExpiradasTable({ reloadKey }) {
         <tbody>
           {data.map(r => (
             <tr key={r.id}>
-              <td>{r.livro_foto ? <img src={r.livro_foto} alt="Capa" style={{maxWidth:40,maxHeight:60}} /> : 'sem imagem'}</td>
-              <td>{r.livro_titulo}</td>
               <td>{r.pessoa_nome}</td>
-              <td>{r.dataReserva}</td>
+              <td>{r.livro_titulo}</td>
+              <td>{r.status}</td>
               <td>{r.dataValidade}</td>
-              <td>{r.confirmarPosse ? <span style={{color: 'green', fontWeight: 'bold'}}>✓ Confirmada</span> : <span style={{color: 'orange'}}>Pendente</span>}</td>
-              <td>
-                <button className="btn btn-small" onClick={() => handleEdit(r)}>Editar</button>
-              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <EditReservaCard open={editOpen} onClose={() => setEditOpen(false)} onUpdated={handleEditSave} reserva={editingReserva} />
     </div>
   );
 }
