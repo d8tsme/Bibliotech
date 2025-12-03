@@ -17,7 +17,7 @@ public class Pessoa {
     private Long id;
     private String nome;
     private String email;
-    private int telefone;
+    private String telefone;
 
     public Pessoa(DadosCadastroPessoa dados) {
         this.nome = dados.nome();
@@ -31,7 +31,7 @@ public class Pessoa {
         if (dados.email() != null) {
             this.email = dados.email();
         }
-        if (dados.telefone() != 0) {
+        if (dados.telefone() != null && !dados.telefone().isEmpty()) {
             this.telefone = dados.telefone();
         }
     }

@@ -14,7 +14,7 @@ export default function AddPessoaCard({ open, onClose, onCreated }) {
     e.preventDefault();
     setError(null);
     try {
-      const payload = { nome, email, telefone: parseInt(telefone, 10) };
+      const payload = { nome, email, telefone };
       console.log('POST /pessoas/cadastrar', payload);
       await apiFetch('/pessoas/cadastrar', {
         method: 'POST',

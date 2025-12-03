@@ -1,4 +1,4 @@
 package com.bibliotech.api.pessoas;
 
-public record DadosAlteracaoPessoa(Long id, String nome, String email, int telefone) {
+public record DadosAlteracaoPessoa(Long id, String nome, String email, String telefone) {
 }
