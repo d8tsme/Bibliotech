@@ -961,7 +961,7 @@ select {
   p { font-size: 0.75rem; }
 
   .btn, button {
-    padding: 0.2rem 0.5rem;
+    padding: 0.2rem 0.2rem;
     font-size: 0.7rem;
     width: 100%;
   }

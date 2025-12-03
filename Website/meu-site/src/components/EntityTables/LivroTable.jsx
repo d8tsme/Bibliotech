@@ -103,7 +103,7 @@ export default function LivroTable() {
   return (
     <div>
       <h2>Livros</h2>
-      <div className="table-controls" style={{display:'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems:'center'}}>
+      <div className="table-controls" style={{display:'flex', gap: '0.2rem', marginBottom: '0.5rem', alignItems:'center'}}>
         <input placeholder="Buscar" value={search} onChange={e => setSearch(e.target.value)} />
         <select value={authorFilter} onChange={e => setAuthorFilter(e.target.value)}>
           <option value="">Todos autores</option>
@@ -119,10 +119,10 @@ export default function LivroTable() {
           <option value="Emprestado">Emprestado</option>
           <option value="Reservado">Reservado</option>
         </select>
-        <button className="btn" onClick={() => saveCsv('livros.csv', (filteredLivros.length ? filteredLivros : livros), cols)}>Salvar CSV</button>
-        <div style={{marginLeft:'auto', display:'flex', gap:'0.5rem', alignItems:'center'}}>
-          <button className="btn bulk-delete-btn" onClick={handleBulkDelete} disabled={!selected.length}>Excluir Selecionados</button>
-          <button className="btn" onClick={() => setViewMode(viewMode === 'table' ? 'cards' : 'table')}>{viewMode === 'table' ? 'Ver em Cards' : 'Ver em Tabela'}</button>
+        <button className="btn-small" onClick={() => saveCsv('livros.csv', (filteredLivros.length ? filteredLivros : livros), cols)}>Salvar CSV</button>
+        <div style={{marginLeft:'auto', display:'flex', flexDirection:'column', gap:'0.2rem', alignItems:'center'}}>
+          <button className="btn-small" onClick={() => setViewMode(viewMode === 'table' ? 'cards' : 'table')}>{viewMode === 'table' ? 'Ver em Cards' : 'Ver em Tabela'}</button>
+          <button className="btn-small" onClick={handleBulkDelete} disabled={!selected.length}>Excluir Selecionados</button>
         </div>
       </div>
       {viewMode === 'table' ? (
