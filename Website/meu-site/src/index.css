@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-/* UNIVERSAL RESET & GLOBAL FONT */
 * {
   margin: 0;
   padding: 0;
@@ -75,7 +74,6 @@ code {
 }
 
 
-/* global smooth helpers */
 *{box-sizing:border-box}
   /* Modern global styles */
 /* Keep the rest of the general body styles the same but ensure Poppins */
@@ -85,7 +83,7 @@ body {
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
-/* All properties above are now inside valid blocks. Add additional styles below, ensuring proper syntax. */
+
 
 .app-container {
   min-height: 100vh;
@@ -100,7 +98,7 @@ body {
   }
 }
 
-/* Navbar */
+
 .sidebar, .navbar {
   /* Sidebar (or navbar) as part of layout - fixed left column */
   width: var(--sidebar-width);
@@ -124,7 +122,7 @@ body {
   padding-bottom: 100px;
 }
 
-/* Floating box inside navbar */
+
 .sidebar-logo, .navbar-floating-box {
   background: transparent;
   color: var(--text-light);
@@ -139,7 +137,7 @@ body {
   letter-spacing: -0.5px;
 }
 
-/* Sidebar specific styles (matching provided design) */
+
 .sidebar-title, .sidebar-logo {
   font-size: 2.4rem;
   font-weight: 800;
@@ -174,11 +172,9 @@ body {
   transition: background 0.16s, color 0.16s, transform 0.12s;
 }
 
-/* Default main content (without a sidebar) */
 .main-content {
 .sidebar-links li { width: 100%; }
 
-/* Container do popup */
 .sidebar-menu-popup {
   display: none !important;
 }
@@ -191,7 +187,7 @@ body {
   width: calc(100% - 3.2rem);
 }
 
-/* Botão logout na sidebar */
+
 .sidebar-logout-btn {
   width: 100%;
   background: white;
@@ -216,7 +212,7 @@ body {
   transform: translateY(0);
 }
 
-/* Remove old sidebar divider and bottom menu */
+
 .sidebar-divider { display: none; }
 .sidebar-bottom-menu { display: none; }
 .sidebar-menu-toggle { display: none !important; }
@@ -232,7 +228,7 @@ body {
   background: transparent;
 }}
 
-/* ===== Scrollbar Invisível para navegadores Webkit (Chrome, Edge, Opera) ===== */
+
 .sidebar::-webkit-scrollbar,
 .main-content::-webkit-scrollbar {
   width: 6px;
@@ -255,7 +251,7 @@ body {
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* ===== Scrollbar Invisível para Firefox ===== */
+
 .sidebar,
 .main-content {
   scrollbar-width: thin;
@@ -263,14 +259,14 @@ body {
 }
 
 
-/* When inside a layout that has a fixed sidebar, add the left margin */
+
 .layout .main-content {
   margin-left: calc(var(--sidebar-width) + 44px);
   background: var(--white);
   transform: translateX(4px);
 }
 
-/* Page header */
+
 .page-header {
   display: flex;
   align-items: center;
@@ -301,7 +297,7 @@ body {
 }
 .add-btn-bar .btn.primary:hover, .add-btn:hover { background: var(--gray-200); transform: translateY(-1px); }
 
-/* Book card list */
+
 .book-list { display:flex; flex-direction:column; gap:var(--space-md); }
 .book-card {
   display:flex;
@@ -323,13 +319,13 @@ body {
 .action-btn:hover{ background:#eee; }
 .book-status{ padding:0.46rem 0.9rem; background:transparent; border:1px solid #ddd; border-radius:12px; font-weight:600; color:var(--black-700); }
 
-/* Tables override */
+
 thead { background:#111; color:white; }
 thead th{ padding:0.8rem; text-align:left; font-size:0.95rem; cursor: pointer; }
 tbody tr:nth-child(even){ background:#c7c7c741; }
 tbody td{ padding:0.8rem; font-size:0.9rem; }
 
-/* Small action buttons in table rows */
+
 .btn-small {
   padding: 0.32rem 0.6rem !important;
   font-size: 0.85rem !important;
@@ -337,10 +333,10 @@ tbody td{ padding:0.8rem; font-size:0.9rem; }
   white-space: nowrap;
 }
 
-/* Modals */
+
 .modal-overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:2000; }
 .modal-container{ background:var(--white); padding:1.6rem; width:480px; border-radius:14px; border: 1px solid var(--gray-200); max-height:90vh; overflow-y:auto; }
-/* AddLivro / Form overlays */
+
 .addlivro-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:2000 }
 .addlivro-card{ background:var(--white); padding:1.4rem; border-radius: 12px; width: 460px; box-shadow: 0 16px 40px rgba(0,0,0,0.18); border: 1px solid var(--gray-200); max-height:90vh; overflow-y:auto; }
 .addlivro-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem }
@@ -348,13 +344,11 @@ tbody td{ padding:0.8rem; font-size:0.9rem; }
 .addlivro-form{ display:flex; flex-direction:column; gap:var(--space-sm) }
 .addlivro-actions{ display:flex; justify-content:flex-end; gap:var(--space-sm); margin-top: .6rem }
 
-/* Table toolbar small button sizes */
 .table-toolbar .btn, .table-controls .btn select { padding: 0.32rem 0.6rem; font-size: 0.92rem; border-radius: 8px; color: var(--text-light); background-color: var(--black-600); }
 .table-toolbar { gap: 0.6rem }
 .bulk-delete-btn { margin-left: 1rem; margin-top: 0.75rem }
 .table-controls options {color: var(--text-light);}
 
-/* space action buttons per cell */
 table tbody td > button, table tbody td > .btn { margin-right: 0.4rem; margin-bottom: 0.3rem; }
 table tbody td .btn { padding: 0.28rem 0.58rem; display: inline-block; }
 table {
@@ -362,7 +356,6 @@ table {
   border-collapse: collapse;
 }
 
-/* Form and modal styles: ensure modal and form card are consistent with addlivro */
 .form-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:2000; }
 .form-card{ background:var(--white); padding:1.4rem; border-radius: 12px; width: 640px; box-shadow: 0 20px 48px rgba(0,0,0,0.22); border: 1px solid var(--gray-200); max-height: 90vh; overflow-y:auto }
 .form-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem }
@@ -371,13 +364,11 @@ table {
 
 .addlivro-card select, .addlivro-card input, .addlivro-card .form-input, .addlivro-card .form-select, .form-card select, .form-card input { width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0 }
 
-/* scrollbar styling: dark translucent */
 .addlivro-card::-webkit-scrollbar, .form-card::-webkit-scrollbar, .main-content::-webkit-scrollbar { width: 10px; }
 .addlivro-card::-webkit-scrollbar-thumb, .form-card::-webkit-scrollbar-thumb, .main-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.28); border-radius: 999px; }
 .addlivro-card::-webkit-scrollbar-track, .form-card::-webkit-scrollbar-track, .main-content::-webkit-scrollbar-track { background: transparent; }
 .addlivro-card, .form-card, .main-content { scrollbar-color: rgba(0,0,0,0.28) transparent; scrollbar-width: thin }
 
-/* Card view for records layout */
 .records-card-view { display:flex; flex-wrap:wrap; gap: 1rem; margin-top: 1rem }
 .record-card { background: var(--gray-300); border-radius:12px; padding: 1rem; box-shadow: 0 6px 24px rgba(0,0,0,0.06); width: calc(33.333% - 1rem); display:flex; gap: 0.8rem; align-items:flex-start }
 .record-card .book-photo-small { width:72px; height:96px; background:var(--gray-200); display:flex; align-items:center; justify-content:center; border-radius:8px; overflow:hidden }
@@ -401,10 +392,9 @@ table {
 .btn-primary{ background:transparent; color:var(--black-700); padding:0.46rem 0.84rem; border-radius:8px; border:1px solid var(--black-700); cursor:pointer; font-weight:600; display: inline-block; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .btn-secondary{ background:transparent; color:var(--text-muted); padding:0.46rem 0.84rem; border-radius:8px; border:1px solid var(--gray-200); cursor:pointer; display: inline-block; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 
-/* Minor layout helpers */
 .layout { gap: var(--space-lg); align-items: stretch; }
 
-/* enforce font inheritance for UI elements */
+
 input,button,textarea,select{ font-family: inherit }
 .sidebar a, .navbar a {
   color: var(--text-muted);
@@ -414,7 +404,6 @@ input,button,textarea,select{ font-family: inherit }
 }
 .navbar a:hover { background: transparent; color: var(--white); transform: translateX(2px); font-weight:700 }
 
-/* Main content grid */
 .layout {
   display: flex;
   width: 100%;
@@ -433,7 +422,6 @@ input,button,textarea,select{ font-family: inherit }
   box-shadow: 0 6px 40px rgba(0,0,0,0.06);
 }
 
-/* Card style */
 .card {
   background: var(--bg-card);
   border-radius: 18px;
@@ -447,7 +435,6 @@ input,button,textarea,select{ font-family: inherit }
   box-shadow: 0 4px 24px rgba(55,59,68,0.16);
 }
 
-/* Buttons - subtle monochrome */
 button, .btn {
   background: transparent;
   color: var(--text-main);
@@ -463,7 +450,7 @@ button:hover, .btn:hover { background: var(--gray-200); transform: translateY(-1
 .btn.primary { background: transparent; color: var(--black-700); border: 1px solid var(--black-700); }
 .btn.primary:hover { background: var(--gray-200); transform: translateY(-1px); }
 
-/* Forms */
+
 input, select, textarea {
   border: 1px solid var(--color1);
   border-radius: 14px;
@@ -479,13 +466,13 @@ input:focus, select:focus, textarea:focus {
   outline: none;
 }
 
-/* Headings */
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--color5);
   margin-top: 0;
 }
 
-/* Links */
+
 a {
   color: var(--color4);
   text-decoration: none;
@@ -495,7 +482,7 @@ a:hover {
   color: var(--color3);
 }
 
-/* Table */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -515,7 +502,7 @@ tr:hover {
   background: var(--color2);
 }
 
-/* Responsive */
+
 @media (max-width: 900px) {
   .navbar, .sidebar { position: relative; left: 0; top: 0; width: 100%; height: auto; border-radius: 14px; box-shadow: none; display:flex; flex-direction:row; padding: 0.4rem; }
   .navbar-floating-box {
@@ -531,11 +518,11 @@ tr:hover {
 }
 @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* apply nicer default for inputs across the app */
+
 input,textarea,select,button{font-family:inherit}
 
 select {
-  appearance: none;        /* Remove setinha padrão */
+  appearance: none;     
   -webkit-appearance: none;
   -moz-appearance: none;
 
@@ -547,13 +534,11 @@ select {
   color: var(--text-main);
   cursor: pointer;
 
-  /* deixa espaço para a setinha personalizada */
   padding-right: 38px;
 }
 
-/* ===== RESPONSIVIDADE GLOBAL COMPLETA ===== */
 
-/* Desktop Grande (1920px+) */
+
 @media (min-width: 1920px) {
   :root {
     --space-xs: 0.5rem;
@@ -573,7 +558,6 @@ select {
   p { font-size: clamp(1rem, 1.5vw, 1.2rem); }
 }
 
-/* Desktop (1400px - 1919px) */
 @media (min-width: 1400px) and (max-width: 1919px) {
   :root {
     font-size: 17px;
@@ -584,7 +568,7 @@ select {
   h3 { font-size: clamp(1.3rem, 2.5vw, 2.3rem); }
 }
 
-/* Tablet Landscape (1024px - 1399px) */
+
 @media (min-width: 1024px) and (max-width: 1399px) {
   :root {
     --space-sm: 0.7rem;
@@ -620,7 +604,7 @@ select {
   }
 }
 
-/* Tablet Portrait (768px - 1023px) */
+
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
     --space-xs: 0.3rem;
@@ -678,7 +662,6 @@ select {
   }
 }
 
-/* Smartphone Grande (480px - 767px) */
 @media (min-width: 480px) and (max-width: 767px) {
   :root {
     --space-xs: 0.25rem;
@@ -808,7 +791,6 @@ select {
   }
 }
 
-/* Smartphone Pequeno (320px - 479px) */
 @media (max-width: 479px) {
   :root {
     --space-xs: 0.2rem;
@@ -919,11 +901,10 @@ select {
   }
 
   input, textarea, select {
-    font-size: 16px; /* Prevent zoom on iOS */
+    font-size: 16px; 
   }
 }
 
-/* Ultra pequeno (< 320px) */
 @media (max-width: 319px) {
   :root {
     --space-xs: 0.15rem;
