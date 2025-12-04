@@ -35,8 +35,8 @@ import apiFetch from '../../utils/apiFetch';
       }
     }
     load();
-    return () => { cancelled = true; };
-  }, [open]);
+    return () => {{ cancelled = true; };
+  }, ([open]);
 
   if (!open) return null;
 
@@ -120,4 +120,4 @@ import apiFetch from '../../utils/apiFetch';
       </div>
     </div>
   );
-}
+
