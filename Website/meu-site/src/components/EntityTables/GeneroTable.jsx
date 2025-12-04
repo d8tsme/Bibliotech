@@ -3,7 +3,7 @@ import apiFetch from '../../utils/apiFetch';
 import saveCsv from '../../utils/csv';
 import EditGeneroCard from '../EntityForms/EditGeneroCard';
 
-export default function GeneroTable() {
+export default function GeneroTable({ reloadKey }) {
   const [generos, setGeneros] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState('');
@@ -15,7 +15,7 @@ export default function GeneroTable() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadGeneros();
-  }, [sort, /*page omitted*/ search]);
+  }, [sort, /*page omitted*/ search, reloadKey]);
 
   async function loadGeneros() {
     let url = `/generos/listar`;

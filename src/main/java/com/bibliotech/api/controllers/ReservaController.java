@@ -1,6 +1,5 @@
 package com.bibliotech.api.controllers;
 
-import com.bibliotech.api.emprestimos.DadosAlteracaoEmprestimo;
 import com.bibliotech.api.emprestimos.DadosCadastroEmprestimo;
 import com.bibliotech.api.emprestimos.Emprestimo;
 import com.bibliotech.api.emprestimos.EmprestimoRepositorio;
@@ -14,8 +13,6 @@ import com.bibliotech.api.pessoas.PessoaRepositorio;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,7 +70,7 @@ public class ReservaController {
 
     @PutMapping("/atualizar/{id}")
     @Transactional
-    public ResponseEntity atualizar(@PathVariable Long id,
+    public ResponseEntity<?> atualizar(@PathVariable Long id,
                                     @RequestBody @Valid DadosAlteracaoReserva dados) {
         Reserva reserva = reservaRepositorio.getReferenceById(id);
 
@@ -159,13 +156,5 @@ public class ReservaController {
         });
 
         return ResponseEntity.ok("Reservas vencidas atualizadas.");
-    }
-
-    @PutMapping("/{id}/confirmar-posse")
-    @Transactional
-    public ResponseEntity<?> confirmarPosseUpdate(@PathVariable Long id) {
-        Reserva reserva = reservaRepositorio.getReferenceById(id);
-        reserva.setConfirmarPosse(true);
-        return ResponseEntity.ok(new DadosListagemReserva(reserva));
     }
 }

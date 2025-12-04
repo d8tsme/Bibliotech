@@ -19,7 +19,7 @@ export default function Generos() {
             <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Gênero</button>
           </div>
         </div>
-        <GeneroTable key={reloadKey} />
+        <GeneroTable reloadKey={reloadKey} />
         <AddGeneroCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
       </div>
     </div>

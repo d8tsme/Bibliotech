@@ -35,7 +35,7 @@ function Autor() {
             <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Autor</button>
           </div>
         </div>
-        <AutorTable key={reloadKey} />
+        <AutorTable reloadKey={reloadKey} />
         <AddAutorCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
       </div>
     </div>

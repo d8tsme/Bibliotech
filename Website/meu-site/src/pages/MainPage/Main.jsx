@@ -6,6 +6,10 @@ import AddLivroCard from '../../components/AddLivroCard/AddLivroCard.jsx'; // No
 
 function Main() {
   const [showAdd, setShowAdd] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
+  
+  const triggerReload = () => setReloadKey(k => k + 1);
+
   return (
     <div className="layout">
       <Navbar/>
@@ -16,8 +20,8 @@ function Main() {
             <button className="btn primary" onClick={() => setShowAdd(true)}>Adicionar Livro</button>
           </div>
         </div>
-            <LivroTable />
-        <AddLivroCard open={showAdd} onClose={() => setShowAdd(false)} onCreated={() => { /* could refresh table */ }} />
+            <LivroTable reloadKey={reloadKey} />
+        <AddLivroCard open={showAdd} onClose={() => setShowAdd(false)} onCreated={triggerReload} />
       </div>
     </div>
   );

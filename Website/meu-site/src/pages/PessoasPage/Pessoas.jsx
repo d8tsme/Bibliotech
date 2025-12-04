@@ -9,6 +9,9 @@ import Layout from '../../components/mainlayout/layout.jsx';
 export default function Pessoas() {
   const [showAdd, setShowAdd] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  
+  const triggerReload = () => setReloadKey(k => k + 1);
+  
   return (
     <div className="layout">
       <Navbar/>
@@ -19,8 +22,8 @@ export default function Pessoas() {
             <button onClick={()=>setShowAdd(true)} className="btn primary">Adicionar Pessoa</button>
           </div>
         </div>
-        <PessoaTable key={reloadKey} />
-        <AddPessoaCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={()=>setReloadKey(k=>k+1)} />
+        <PessoaTable reloadKey={reloadKey} />
+        <AddPessoaCard open={showAdd} onClose={()=>setShowAdd(false)} onCreated={triggerReload} />
       </div>
     </div>
   );

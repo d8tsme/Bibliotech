@@ -3,7 +3,7 @@ import apiFetch from '../../utils/apiFetch';
 import saveCsv from '../../utils/csv';
 import EditLivroCard from '../AddLivroCard/EditLivroCard';
 
-export default function LivroTable() {
+export default function LivroTable({ reloadKey }) {
   const [livros, setLivros] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState('');
@@ -17,11 +17,31 @@ export default function LivroTable() {
   const [genreFilter, setGenreFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
+  const [currentPage, setCurrentPage] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const cols = [{key:'titulo', label:'Título'},{key:'autorNome', label:'Autor'},{key:'generoNome', label:'Gênero'},{key:'isbn', label:'ISBN'},{key:'status', label:'Status'}];
+
+  // Determine cards per page based on window width
+  const getCardsPerPage = () => {
+    if (windowWidth >= 1920) return 6; // 3 cols x 2 rows
+    if (windowWidth >= 1440) return 4; // 2 cols x 2 rows
+    if (windowWidth >= 1024) return 3; // 1 col x 3 rows or 3 cols x 1 row
+    if (windowWidth >= 768) return 2;  // 2 cols x 1 row
+    return 1; // 1 col mobile
+  };
+
+  const cardsPerPage = getCardsPerPage();
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     loadLivros();
-  }, [sort]);
+    setCurrentPage(1); // Reset pagination on reload
+  }, [sort, reloadKey]);
 
   useEffect(() => {
     // load authors and genres for filters
@@ -147,8 +167,8 @@ export default function LivroTable() {
               <td><input type="checkbox" checked={selected.includes(livro.id)} onChange={() => handleSelect(livro.id)} /></td>
               <td>{livro.titulo}</td>
               <td>{livro.paginas}</td>
-              <td>{livro.autorId}</td>
-              <td>{livro.generoId}</td>
+              <td>{livro.autorNome || livro.autorId}</td>
+              <td>{livro.generoNome || livro.generoId}</td>
               <td>{livro.isbn}</td>
               <td>{livro.anoPublicacao}</td>
               <td><span style={{
@@ -170,31 +190,82 @@ export default function LivroTable() {
         </tbody>
       </table>
       ) : (
-        <div className="records-card-view">
-          {filteredLivros.map(livro => (
-            <div key={livro.id} className="record-card">
-              <div className="card-left">
-                <div className="book-photo-small">{livro.foto ? <img src={livro.foto} alt="Capa" /> : 'sem imagem'}</div>
-              </div>
-              <div className="card-content">
-                <div className="card-title">{livro.titulo}</div>
-                <div className="card-meta">{livro.autorNome || livro.autorId} • {livro.generoNome || livro.generoId}</div>
-                <div className="card-status">
+        <div style={{display:'flex', flexDirection:'column', gap:'1rem'}}>
+          <div className="records-card-view" style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(auto-fit, minmax(clamp(150px, calc(100vw / ${cardsPerPage === 1 ? 1.2 : cardsPerPage}), 300px), 1fr))`,
+            gap: '1rem',
+            padding: '0.5rem',
+            margin: '0 auto',
+            maxWidth: '90vw'
+          }}>
+            {filteredLivros
+              .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
+              .map(livro => (
+              <div key={livro.id} className="record-card" style={{
+                display:'flex',
+                flexDirection:'column',
+                gap:'0.5rem',
+                padding:'1rem',
+                border:'1px solid #ccc',
+                borderRadius:'8px',
+                boxShadow:'0 2px 4px rgba(0,0,0,0.1)',
+                transition:'transform 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'}
+              onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+                <div style={{minHeight:'150px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'#f0f0f0', borderRadius:'4px'}}>
+                  {livro.foto ? <img src={livro.foto} alt="Capa" style={{maxWidth:'100%', maxHeight:'100%', objectFit:'cover'}} /> : <div style={{fontSize:'12px', color:'#999'}}>sem imagem</div>}
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:'bold', fontSize:'14px', marginBottom:'4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.titulo}</div>
+                  <div style={{fontSize:'12px', color:'#666', marginBottom:'8px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.autorNome || livro.autorId} • {livro.generoNome || livro.generoId}</div>
+                </div>
+                <div>
                   <span style={{
                     backgroundColor: livro.status === 'Disponível' ? 'green' : livro.status === 'Emprestado' ? 'red' : 'blue',
                     color: 'white',
-                    padding: '2px 6px',
+                    padding: '4px 8px',
                     borderRadius: '4px',
-                    fontSize: '12px'
+                    fontSize: '11px',
+                    display:'inline-block'
                   }}>{livro.status}</span>
                 </div>
-                <div className="card-actions">
-                  <button className="btn" onClick={() => handleEdit(livro)}>Editar</button>
-                  <button className="btn" onClick={() => handleDelete(livro.id)}>Excluir</button>
+                <div style={{display:'flex', gap:'0.25rem', marginTop:'auto'}}>
+                  <button className="btn btn-small" onClick={() => handleEdit(livro)} style={{flex:1, fontSize:'12px'}}>Editar</button>
+                  <button className="btn btn-small" onClick={() => handleDelete(livro.id)} style={{flex:1, fontSize:'12px'}}>Excluir</button>
                 </div>
               </div>
+            ))}
+          </div>
+          {Math.ceil(filteredLivros.length / cardsPerPage) > 1 && (
+            <div style={{display:'flex', justifyContent:'center', gap:'0.5rem', marginTop:'1rem'}}>
+              <button 
+                className="btn btn-small" 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >← Anterior</button>
+              <div style={{display:'flex', alignItems:'center', gap:'0.25rem'}}>
+                {Array.from({length: Math.ceil(filteredLivros.length / cardsPerPage)}, (_, i) => i + 1).map(p => (
+                  <button 
+                    key={p}
+                    className="btn btn-small"
+                    onClick={() => setCurrentPage(p)}
+                    style={{
+                      backgroundColor: currentPage === p ? '#007bff' : '#f0f0f0',
+                      color: currentPage === p ? 'white' : 'black',
+                      minWidth:'32px'
+                    }}
+                  >{p}</button>
+                ))}
+              </div>
+              <button 
+                className="btn btn-small" 
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredLivros.length / cardsPerPage), p + 1))}
+                disabled={currentPage === Math.ceil(filteredLivros.length / cardsPerPage)}
+              >Próxima →</button>
             </div>
-          ))}
+          )}
         </div>
       )}
       <EditLivroCard open={editOpen} onClose={() => setEditOpen(false)} onUpdated={handleEditSave} livro={editingLivro} />

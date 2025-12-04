@@ -2,20 +2,23 @@ import React, { useState, useEffect } from 'react';
 import apiFetch from '../../utils/apiFetch';
 import saveCsv from '../../utils/csv';
 import EditPessoaCard from '../EntityForms/EditPessoaCard';
+import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 
-export default function PessoaTable() {
+export default function PessoaTable({ reloadKey }) {
   const [pessoas, setPessoas] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('nome');
   const [editOpen, setEditOpen] = useState(false);
   const [editingPessoa, setEditingPessoa] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [pessoaParaDeleter, setPessoaParaDeleter] = useState(null);
   const cols = [{key:'nome', label:'Nome'},{key:'email', label:'Email'},{key:'telefone', label:'Telefone'}];
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadPessoas();
-  }, [sort, search]);
+  }, [sort, search, reloadKey]);
 
   async function loadPessoas() {
     let url = `/pessoas/listar`;
@@ -41,6 +44,18 @@ export default function PessoaTable() {
     } catch (err) {
       console.error('Erro ao excluir pessoa', err);
       alert(err.message || 'Erro ao excluir');
+    }
+  }
+
+  function openDeleteConfirm(pessoa) {
+    setPessoaParaDeleter(pessoa);
+    setDeleteConfirmOpen(true);
+  }
+
+  async function confirmDelete() {
+    if (pessoaParaDeleter) {
+      await handleDelete(pessoaParaDeleter.id);
+      setPessoaParaDeleter(null);
     }
   }
 
@@ -98,7 +113,7 @@ export default function PessoaTable() {
               <td>
                 <>
                   <button className="btn btn-small" onClick={() => handleEdit(pessoa)}>Editar</button>
-                  <button className="btn btn-small" onClick={() => handleDelete(pessoa.id)}>Excluir</button>
+                  <button className="btn btn-small" onClick={() => openDeleteConfirm(pessoa)}>Excluir</button>
                 </>
               </td>
             </tr>
@@ -107,6 +122,17 @@ export default function PessoaTable() {
       </table>
       {/* Pagination removed - table renders all items */}
       <EditPessoaCard open={editOpen} onClose={() => setEditOpen(false)} onUpdated={handleEditSave} pessoa={editingPessoa} />
+      <DeleteConfirmModal 
+        open={deleteConfirmOpen} 
+        onClose={() => {
+          setDeleteConfirmOpen(false);
+          setPessoaParaDeleter(null);
+        }} 
+        onConfirm={confirmDelete}
+        entityType="pessoa"
+        entityName={pessoaParaDeleter?.nome}
+        entityId={pessoaParaDeleter?.id}
+      />
     </div>
   );
 }

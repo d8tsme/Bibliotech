@@ -3,7 +3,7 @@ import apiFetch from '../../utils/apiFetch';
 import saveCsv from '../../utils/csv';
 import EditAutorCard from '../EntityForms/EditAutorCard';
 
-export default function AutorTable() {
+export default function AutorTable({ reloadKey }) {
   const [autores, setAutores] = useState([]);
   const [selected, setSelected] = useState([]);
   const [search, setSearch] = useState('');

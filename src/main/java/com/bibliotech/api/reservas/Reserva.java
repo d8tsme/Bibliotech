@@ -34,8 +34,6 @@ public class Reserva {
     @JoinColumn(name = "pessoaId") // A coluna da chave estrangeira na tabela 'reserva'
     private Pessoa pessoa;
 
-    private Boolean confirmarPosse = false;
-
     // Construtor para cadastro
     public Reserva(DadosCadastroReserva dados, Livro livro, Pessoa pessoa) {
         this.dataReserva = dados.dataReserva();
