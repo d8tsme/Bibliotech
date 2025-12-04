@@ -214,6 +214,17 @@ body {
   box-shadow: 0 2px 6px rgba(200, 35, 51, 0.4);
 }
 
+.sidebar-logout-btn:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200, 35, 51, 0.5);
+}
+
+.sidebar-logout-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(200, 35, 51, 0.4);
+}
+
 .sidebar-logout-btn:active {
   transform: translateY(0);
 }

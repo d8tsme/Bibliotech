@@ -99,5 +99,23 @@ public class EmprestimoController {
             return ResponseEntity.badRequest().body("Erro ao excluir empréstimo: " + e.getMessage());
         }
     }
+
+    @DeleteMapping("/excluir/{id}")
+    @Transactional
+    public ResponseEntity<?> excluirPorCaminho(@PathVariable Long id) {
+        try {
+            Optional<Emprestimo> emprestimoOpt = emprestimoRepositorio.findById(id);
+            if (emprestimoOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            Emprestimo emprestimo = emprestimoOpt.get();
+            Livro livro = emprestimo.getLivro();
+            livro.atualizaStatus("Disponível");
+            emprestimoRepositorio.delete(emprestimo);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao excluir empréstimo: " + e.getMessage());
+        }
+    }
 }
 

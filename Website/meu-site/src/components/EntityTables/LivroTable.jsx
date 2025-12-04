@@ -218,9 +218,11 @@ export default function LivroTable({ reloadKey }) {
             {/* Grid layout - mantém proporções mesmo com menos items */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cardsPerPage}, minmax(800px, 1fr))`,
-              gap: '0.01rem',
-              flex: 1,              width: '100%',
+              gridTemplateColumns: `repeat(${cardsPerPage}, minmax(240px, 1fr))`,
+              gap: '1.5rem',
+              flex: 1,
+              alignItems: 'start',
+              width: '100%',
               maxWidth: '1200px'
             }}>
               {filteredLivros
