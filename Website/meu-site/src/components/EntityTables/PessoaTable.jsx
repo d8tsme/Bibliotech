@@ -54,8 +54,22 @@ export default function PessoaTable({ reloadKey }) {
 
   async function confirmDelete() {
     if (pessoaParaDeleter) {
-      await handleDelete(pessoaParaDeleter.id);
-      setPessoaParaDeleter(null);
+      try {
+        const checkRes = await apiFetch(`/pessoas/pode-excluir/${pessoaParaDeleter.id}`);
+        if (!checkRes.podeExcluir) {
+          alert(`Não é possível excluir esta pessoa.\n${checkRes.emprestimos} empréstimo(s) e ${checkRes.reservas} reserva(s) associado(s).`);
+          setPessoaParaDeleter(null);
+          setDeleteConfirmOpen(false);
+          return;
+        }
+        
+        await handleDelete(pessoaParaDeleter.id);
+        setPessoaParaDeleter(null);
+        setDeleteConfirmOpen(false);
+      } catch (err) {
+        console.error('Erro ao verificar e excluir pessoa', err);
+        alert(err.message || 'Erro ao excluir');
+      }
     }
   }
 

@@ -26,8 +26,19 @@ export default function GeneroTable({ reloadKey }) {
   }
 
   async function handleDelete(id) {
-    await apiFetch(`/generos/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
-    loadGeneros();
+    try {
+      const checkRes = await apiFetch(`/generos/pode-excluir/${id}`);
+      if (!checkRes.podeExcluir) {
+        alert(`Não é possível excluir este gênero.\n${checkRes.associacoes} livro(s) associado(s).`);
+        return;
+      }
+      
+      await apiFetch(`/generos/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
+      loadGeneros();
+    } catch (err) {
+      console.error('Erro ao excluir gênero', err);
+      alert(err.message || 'Erro ao excluir gênero');
+    }
   }
 
   async function handleBulkDelete() {

@@ -26,7 +26,23 @@ export default function ReservasAntigasTable({ reloadKey }) {
     try {
       const res = await apiFetch('/reservas/listar');
       let arr = Array.isArray(res) ? res : [];
-      arr = arr.filter(r => r.status === 'Finalizada');
+      
+      // Debug: mostrar primeiro item e seus status
+      if (arr.length > 0) {
+        console.log('Primeiro item:', arr[0]);
+        console.log('Propriedades do primeiro item:', Object.keys(arr[0]));
+        console.log('Status do primeiro item:', arr[0].status);
+      }
+      
+      const beforeFilter = arr.length;
+      arr = arr.filter(r => {
+        const statusNormalizado = r.status ? r.status.trim().toLowerCase() : '';
+        const match = statusNormalizado === 'finalizada';
+        if (!match && arr.length <= 10) console.log(`Status "${r.status}" → normalizado "${statusNormalizado}" → match: ${match}`);
+        return match;
+      });
+      console.log(`Filtradas ${beforeFilter} → ${arr.length} (status === 'finalizada' - case insensitive)`);
+      
       if (search) arr = arr.filter(r => (r.pessoa_nome && r.pessoa_nome.toLowerCase().includes(search.toLowerCase())) || (r.livro_titulo && r.livro_titulo.toLowerCase().includes(search.toLowerCase())));
       
       // Sort

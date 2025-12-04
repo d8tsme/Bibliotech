@@ -42,6 +42,12 @@ export default function AutorTable({ reloadKey }) {
 
   async function handleDelete(id) {
     try {
+      const checkRes = await apiFetch(`/autores/pode-excluir/${id}`);
+      if (!checkRes.podeExcluir) {
+        alert(`Não é possível excluir este autor.\n${checkRes.associacoes} livro(s) associado(s).`);
+        return;
+      }
+      
       const result = await apiFetch(`/autores/excluir/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } });
       console.log('autor delete result:', result);
       await loadAutores();

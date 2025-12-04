@@ -118,7 +118,7 @@ public class ReservaController {
         // finalizar a reserva
         reserva.setStatus("Finalizada");
 
-        return ResponseEntity.ok("Posse confirmada e empréstimo registrado.");
+        return ResponseEntity.ok(new DadosListagemReserva(reserva));
     }
 
 

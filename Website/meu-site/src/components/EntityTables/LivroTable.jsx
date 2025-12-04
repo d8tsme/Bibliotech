@@ -21,13 +21,11 @@ export default function LivroTable({ reloadKey }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const cols = [{key:'titulo', label:'Título'},{key:'autorNome', label:'Autor'},{key:'generoNome', label:'Gênero'},{key:'isbn', label:'ISBN'},{key:'status', label:'Status'}];
 
-  // Determine cards per page based on window width
+  // Determine cards per page based on window width (carousel showing 2-3 books)
   const getCardsPerPage = () => {
-    if (windowWidth >= 1920) return 6; // 3 cols x 2 rows
-    if (windowWidth >= 1440) return 4; // 2 cols x 2 rows
-    if (windowWidth >= 1024) return 3; // 1 col x 3 rows or 3 cols x 1 row
-    if (windowWidth >= 768) return 2;  // 2 cols x 1 row
-    return 1; // 1 col mobile
+    if (windowWidth >= 1440) return 3; // Show 3 cards
+    if (windowWidth >= 768) return 2;  // Show 2 cards
+    return 1; // Show 1 card mobile
   };
 
   const cardsPerPage = getCardsPerPage();
@@ -191,60 +189,99 @@ export default function LivroTable({ reloadKey }) {
       </table>
       ) : (
         <div style={{display:'flex', flexDirection:'column', gap:'1rem'}}>
-          <div className="records-card-view" style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(auto-fit, minmax(clamp(150px, calc(100vw / ${cardsPerPage === 1 ? 1.2 : cardsPerPage}), 300px), 1fr))`,
+          {/* Carousel wrapper */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             gap: '1rem',
-            padding: '0.5rem',
-            margin: '0 auto',
-            maxWidth: '90vw'
+            padding: '0 2rem'
           }}>
-            {filteredLivros
-              .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
-              .map(livro => (
-              <div key={livro.id} className="record-card" style={{
-                display:'flex',
-                flexDirection:'column',
-                gap:'0.5rem',
-                padding:'1rem',
-                border:'1px solid #ccc',
-                borderRadius:'8px',
-                boxShadow:'0 2px 4px rgba(0,0,0,0.1)',
-                transition:'transform 0.2s',
+            {/* Previous button */}
+            <button 
+              className="btn btn-small" 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 10
               }}
-              onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'}
-              onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
-                <div style={{minHeight:'150px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'#f0f0f0', borderRadius:'4px'}}>
-                  {livro.foto ? <img src={livro.foto} alt="Capa" style={{maxWidth:'100%', maxHeight:'100%', objectFit:'cover'}} /> : <div style={{fontSize:'12px', color:'#999'}}>sem imagem</div>}
+            >←</button>
+
+            {/* Carousel content - shows cardsPerPage books */}
+            <div style={{
+              display: 'flex',
+              gap: '1rem',
+              flex: 1,
+              overflowX: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'stretch'
+            }}>
+              {filteredLivros
+                .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
+                .map(livro => (
+                <div key={livro.id} className="record-card" style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  gap:'0.5rem',
+                  padding:'1rem',
+                  border:'1px solid #ccc',
+                  borderRadius:'8px',
+                  boxShadow:'0 2px 4px rgba(0,0,0,0.1)',
+                  transition:'transform 0.2s',
+                  minWidth: cardsPerPage === 1 ? '100%' : `calc((100% - ${(cardsPerPage - 1)}rem) / ${cardsPerPage})`,
+                  flex: '1 1 auto'
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'}
+                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+                  <div style={{minHeight:'180px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'#f0f0f0', borderRadius:'4px'}}>
+                    {livro.foto ? <img src={livro.foto} alt="Capa" style={{maxWidth:'100%', maxHeight:'100%', objectFit:'cover'}} /> : <div style={{fontSize:'12px', color:'#999'}}>sem imagem</div>}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontWeight:'bold', fontSize:'14px', marginBottom:'4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.titulo}</div>
+                    <div style={{fontSize:'12px', color:'#666', marginBottom:'8px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.autorNome || livro.autorId}</div>
+                    <div style={{fontSize:'11px', color:'#888'}}>{livro.generoNome || livro.generoId}</div>
+                  </div>
+                  <div>
+                    <span style={{
+                      backgroundColor: livro.status === 'Disponível' ? 'green' : livro.status === 'Emprestado' ? 'red' : 'blue',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '11px',
+                      display:'inline-block'
+                    }}>{livro.status}</span>
+                  </div>
+                  <div style={{display:'flex', gap:'0.25rem', marginTop:'auto'}}>
+                    <button className="btn btn-small" onClick={() => handleEdit(livro)} style={{flex:1, fontSize:'12px'}}>Editar</button>
+                    <button className="btn btn-small" onClick={() => handleDelete(livro.id)} style={{flex:1, fontSize:'12px'}}>Excluir</button>
+                  </div>
                 </div>
-                <div style={{flex:1}}>
-                  <div style={{fontWeight:'bold', fontSize:'14px', marginBottom:'4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.titulo}</div>
-                  <div style={{fontSize:'12px', color:'#666', marginBottom:'8px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{livro.autorNome || livro.autorId} • {livro.generoNome || livro.generoId}</div>
-                </div>
-                <div>
-                  <span style={{
-                    backgroundColor: livro.status === 'Disponível' ? 'green' : livro.status === 'Emprestado' ? 'red' : 'blue',
-                    color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontSize: '11px',
-                    display:'inline-block'
-                  }}>{livro.status}</span>
-                </div>
-                <div style={{display:'flex', gap:'0.25rem', marginTop:'auto'}}>
-                  <button className="btn btn-small" onClick={() => handleEdit(livro)} style={{flex:1, fontSize:'12px'}}>Editar</button>
-                  <button className="btn btn-small" onClick={() => handleDelete(livro.id)} style={{flex:1, fontSize:'12px'}}>Excluir</button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Next button */}
+            <button 
+              className="btn btn-small" 
+              onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredLivros.length / cardsPerPage), p + 1))}
+              disabled={currentPage === Math.ceil(filteredLivros.length / cardsPerPage)}
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 10
+              }}
+            >→</button>
           </div>
+
+          {/* Pagination indicators */}
           {Math.ceil(filteredLivros.length / cardsPerPage) > 1 && (
-            <div style={{display:'flex', justifyContent:'center', gap:'0.5rem', marginTop:'1rem'}}>
-              <button 
-                className="btn btn-small" 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-              >← Anterior</button>
+            <div style={{display:'flex', justifyContent:'center', gap:'0.5rem', marginTop:'0.5rem'}}>
               <div style={{display:'flex', alignItems:'center', gap:'0.25rem'}}>
                 {Array.from({length: Math.ceil(filteredLivros.length / cardsPerPage)}, (_, i) => i + 1).map(p => (
                   <button 
@@ -259,11 +296,6 @@ export default function LivroTable({ reloadKey }) {
                   >{p}</button>
                 ))}
               </div>
-              <button 
-                className="btn btn-small" 
-                onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredLivros.length / cardsPerPage), p + 1))}
-                disabled={currentPage === Math.ceil(filteredLivros.length / cardsPerPage)}
-              >Próxima →</button>
             </div>
           )}
         </div>

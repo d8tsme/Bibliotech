@@ -1,6 +1,7 @@
 package com.bibliotech.api.controllers;
 
 import com.bibliotech.api.autores.*;
+import com.bibliotech.api.livros.LivroRepositorio;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 //Annotations
 @RestController
@@ -19,6 +22,8 @@ import java.net.URI;
 public class AutorController {
     @Autowired
     private AutorRepositorio autorRepositorio;
+    @Autowired
+    private LivroRepositorio livroRepositorio;
     private static final Logger log = LoggerFactory.getLogger(AutorController.class);
 
     @PostMapping("/cadastrar")
@@ -49,6 +54,21 @@ public class AutorController {
         return ResponseEntity.ok(dados);
     }
 
+    @GetMapping("/pode-excluir/{id}")
+    public ResponseEntity<?> podeExcluir(@PathVariable Long id) {
+        if(!autorRepositorio.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        
+        long countLivros = livroRepositorio.findByAutorId(id).size();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("podeExcluir", countLivros == 0);
+        response.put("associacoes", countLivros);
+        
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/excluir/{id}")
     @Transactional
     public ResponseEntity<?> excluir(@PathVariable Long id) {
@@ -58,6 +78,13 @@ public class AutorController {
         if(!autorRepositorio.existsById(id)){
             return ResponseEntity.notFound().build();
         }
+        
+        long countLivros = livroRepositorio.findByAutorId(id).size();
+        if(countLivros > 0) {
+            log.warn("Tentativa de excluir autor com {} livros associados", countLivros);
+            return ResponseEntity.badRequest().body("Este autor possui " + countLivros + " livro(s) associado(s) e não pode ser excluído.");
+        }
+        
         autorRepositorio.deleteById(id);
         log.info("Autor.excluir succeeded for id={} by user='{}'", id, user);
         return ResponseEntity.noContent().build();
