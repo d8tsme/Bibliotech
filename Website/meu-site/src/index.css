@@ -203,10 +203,15 @@ body {
   box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
-.sidebar-logout-btn:hover {
+.sidebar-logout-btn:hover:not(:disabled) {
   background: #c82333;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(200, 35, 51, 0.5);
+}
+
+.sidebar-logout-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(200, 35, 51, 0.4);
 }
 
 .sidebar-logout-btn:active {
@@ -370,8 +375,8 @@ table {
 .addlivro-card::-webkit-scrollbar-track, .form-card::-webkit-scrollbar-track, .main-content::-webkit-scrollbar-track { background: transparent; }
 .addlivro-card, .form-card, .main-content { scrollbar-color: rgba(0,0,0,0.28) transparent; scrollbar-width: thin }
 
-.records-card-view { display:flex; flex-wrap:wrap; gap: 1rem; margin-top: 1rem }
-.record-card { background: var(--gray-300); border-radius:12px; padding: 1rem; box-shadow: 0 6px 24px rgba(0,0,0,0.06); width: calc(33.333% - 1rem); display:flex; gap: 0.8rem; align-items:flex-start }
+.records-card-view { display:flex; flex-wrap:wrap; gap: 0.1rem; margin-top: 1rem }
+.record-card { background: var(--gray-300); border-radius:12px; padding: 1rem; box-shadow: 0 6px 24px rgba(0,0,0,0.06); width: calc(33.333% - 1rem); display:flex; gap: 0.01rem; }
 .record-card .book-photo-small { width:72px; height:96px; background:var(--gray-200); display:flex; align-items:center; justify-content:center; border-radius:8px; overflow:hidden }
 .record-card .book-photo-small img{ width:100%; height:100%; object-fit:cover }
 .record-card .card-content { flex:1; display:flex; flex-direction:column }

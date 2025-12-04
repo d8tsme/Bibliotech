@@ -4,13 +4,10 @@ import handleAuthError from '../../utils/authError';
 import saveCsv from '../../utils/csv';
 
 export default function EmprestimosConcluidosTable({ reloadKey }) {
-  useEffect(()=>{
-    console.log('EmprestimosConcluidosTable mounted reloadKey=', reloadKey);
-    return ()=>{ console.log('EmprestimosConcluidosTable unmounted'); }
-  }, [reloadKey]);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('dataDevolucao');
+  const [refreshKey, setRefreshKey] = useState(0);
   const cols = [
     { key: 'pessoa_nome', label: 'Pessoa' },
     { key: 'livro_titulo', label: 'Livro' },
@@ -20,13 +17,15 @@ export default function EmprestimosConcluidosTable({ reloadKey }) {
 
   // avoid exhaustive-deps warning: loader intentionally recreated each render
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { load(); }, [search, sort, reloadKey]);
+  useEffect(() => { load(); }, [search, sort, reloadKey, refreshKey]);
 
   async function load() {
     try {
       const res = await apiFetch('/emprestimos/listar');
       let arr = Array.isArray(res) ? res : [];
+      console.log('Total emprestimos:', arr.length);
       arr = arr.filter(e => e.status === 'Devolvido' || e.status === 'Finalizado');
+      console.log('Concluidos/Devolvidos:', arr.length);
       if (search) arr = arr.filter(r => (r.pessoa_nome && r.pessoa_nome.toLowerCase().includes(search.toLowerCase())) || (r.livro_titulo && r.livro_titulo.toLowerCase().includes(search.toLowerCase())));
       
       // Sort
@@ -63,8 +62,8 @@ export default function EmprestimosConcluidosTable({ reloadKey }) {
           console.error(`Erro ao deletar item ${item.id}:`, err);
         }
       }
-      await load();
       alert(`${deletedCount} registro(s) deletado(s) com sucesso`);
+      setRefreshKey(k => k + 1); // Force reload by incrementing key
     } catch (err) {
       console.error('Erro ao deletar registros', err);
       alert(err.message || 'Erro ao deletar');

@@ -218,11 +218,10 @@ export default function LivroTable({ reloadKey }) {
             {/* Grid layout - mantém proporções mesmo com menos items */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cardsPerPage}, 1fr)`,
-              gap: '1rem',
-              flex: 1,
-              alignItems: 'stretch',
-              width: '100%'
+              gridTemplateColumns: `repeat(${cardsPerPage}, minmax(800px, 1fr))`,
+              gap: '0.01rem',
+              flex: 1,              width: '100%',
+              maxWidth: '1200px'
             }}>
               {filteredLivros
                 .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
@@ -231,18 +230,19 @@ export default function LivroTable({ reloadKey }) {
                   display:'flex',
                   flexDirection:'column',
                   gap:'0.5rem',
-                  padding:'1rem',
-                  border:'1px solid #ccc',
+                  padding:'0.8rem',
+                  border:'1px solid #ddd',
                   borderRadius:'8px',
-                  boxShadow:'0 2px 4px rgba(0,0,0,0.1)',
-                  transition:'transform 0.2s',
-                  minWidth: '0'
+                  boxShadow:'0 2px 8px rgba(0,0,0,0.08)',
+                  transition:'all 0.2s ease',
+                  minWidth: '0',
+                  height: '100%'
                 }}
-                onMouseEnter={e => e.currentTarget.style.transform='scale(1.02)'}
-                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 8px 16px rgba(0,0,0,0.15)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; }}>
                   {/* Imagem com tamanho fixo obrigatório */}
-                  <div style={{width:'100%', height:'160px', display:'flex', justifyContent:'center', alignItems:'center', backgroundColor:'#f0f0f0', borderRadius:'4px', overflow:'hidden', flexShrink: 0}}>
-                    {livro.foto ? <img src={livro.foto} alt="Capa" style={{width:'100%', height:'100%', objectFit:'cover'}} /> : <div style={{fontSize:'12px', color:'#999'}}>sem imagem</div>}
+                  <div style={{width:'100%', paddingBottom:'125%', position:'relative', backgroundColor:'#f5f5f5', borderRadius:'6px', overflow:'hidden', flexShrink: 0}}>
+                    {livro.foto ? <img src={livro.foto} alt="Capa" style={{position:'absolute', top:0, left:0, width:'100%', height:'100%', objectFit:'cover'}} /> : <div style={{position:'absolute', top:0, left:0, width:'100%', height:'100%', display:'flex', justifyContent:'center', alignItems:'center', fontSize:'12px', color:'#999'}}>sem imagem</div>}
                   </div>
                   <div style={{flex:1, display:'flex', flexDirection:'column', gap:'0.4rem', minHeight: 0}}>
                     <div style={{fontWeight:'bold', fontSize:'13px', overflow:'hidden', textOverflow:'ellipsis', display:'-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient:'vertical', minHeight:'32px', lineHeight:'1.6'}}>{livro.titulo}</div>
