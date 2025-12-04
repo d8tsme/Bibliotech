@@ -125,7 +125,7 @@ Criar uma plataforma acessível e funcional que simule uma biblioteca moderna, p
 ## Equipe Responsável (Turma CTI 2025)
 
 * **Davi Gama** — Fullstack / Coordenação
-* **Arthur Valezio** — Backend / Modelagem
+* **Arthur Valezio** — Fullstack / Modelagem
 * **Camila Carvalho** — Frontend / UI
 * **Thainan Vitória** — Documentação / UX
 
