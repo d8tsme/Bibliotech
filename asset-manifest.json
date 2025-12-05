@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Bibliotech/static/css/main.b1ac91a6.css",
+    "main.js": "/Bibliotech/static/js/main.61cdc249.js",
+    "static/js/453.de8f1400.chunk.js": "/Bibliotech/static/js/453.de8f1400.chunk.js",
+    "static/media/terf.png": "/Bibliotech/static/media/terf.51919401e32bc9c6a2f3.png",
+    "index.html": "/Bibliotech/index.html",
+    "main.b1ac91a6.css.map": "/Bibliotech/static/css/main.b1ac91a6.css.map",
+    "main.61cdc249.js.map": "/Bibliotech/static/js/main.61cdc249.js.map",
+    "453.de8f1400.chunk.js.map": "/Bibliotech/static/js/453.de8f1400.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b1ac91a6.css",
+    "static/js/main.61cdc249.js"
+  ]
+}
