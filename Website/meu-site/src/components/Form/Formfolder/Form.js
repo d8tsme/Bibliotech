@@ -13,7 +13,7 @@ export default function Form() {
     const senha = form.senha.value;
     try {
         setLoading(true);
-        const API_TARGET = process.env.REACT_APP_API_URL || 'https://kelsi-scrobiculate-dina.ngrok-free.dev';
+        const API_TARGET = process.env.REACT_APP_API_URL || 'https://cupreous-iridescent-alexia.ngrok-free.dev';
         const res = await fetch(`${API_TARGET}/auth`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "1" },
